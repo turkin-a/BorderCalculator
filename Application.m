@@ -1,47 +1,36 @@
 classdef Application < handle
     properties (Access = private, Constant)
-        xmlFileName = 'DefaultSettings.xml';
-    end    
+        xmlApplicationConfigFileName (1,:) char = 'DefaultApplicationConfig.xml'
+    end
     properties (Access = private)
-        xmlData XMLData
     end
     
     properties (Dependent)
-        FullInputFileName
-        FullOutputFolderName
-        FileNameSuffix
     end
     
     methods
         function newObj = Application()
         end
-        function fullInputFileName = get.FullInputFileName(obj)
-            fullInputFileName = GetFullInputFileName(obj);
-        end
-        function fullOutputFolderName = get.FullOutputFolderName(obj)
-            fullOutputFolderName = GetFullOutputFolderName(obj);
-        end
-        function fileNameSuffix = get.FileNameSuffix(obj)
-            fileNameSuffix =  obj.xmlData.FileNameSuffix;            
-        end
-        
     end
    
     methods (Access = public)
         function obj = Run(obj)
             PrepereApplicationConfig(obj);
+            PrepereModelParameters(obj);
             
-            
-            g = 1;
         end
     end
     
     methods (Access = private)
         function PrepereApplicationConfig(obj)
             AddPaths(obj);
-            LoadSettingsFromXML(obj);
-            MakeOutputFolder(obj);
-            MakeInstanceOfApplicationConfig(obj);
+            xmlData = LoadApplicationConfigFromXML(obj);
+            MakeOutputFolder(obj, xmlData);
+            MakeInstanceOfApplicationConfig(obj, xmlData);
+        end
+        function PrepereModelParameters(obj)
+            xmlData = LoadModelParametersFromXML(obj);
+            MakeInstanceOfModelParameters(obj, xmlData);   
         end
         function obj = AddPaths(obj)
             AddPathsOfClasses(obj);
@@ -58,25 +47,27 @@ classdef Application < handle
         function workPath = GetWorkPath(obj)
             workPath = cd('.');
         end
-        function obj = MakeInstanceOfApplicationConfig(obj)
-            appConfig = ApplicationConfig.Instance();
-            appConfig.SetSettings(obj);
+        function obj = MakeInstanceOfApplicationConfig(obj, xmlData)
+            applicationConfig = ApplicationConfig.Instance();
+            applicationConfig.SetSettings(xmlData);
+        end
+        function obj = MakeInstanceOfModelParameters(obj, xmlData)
+            modelParameters = ModelParameters.Instance();
+            modelParameters.SetSettings(xmlData);
         end
 
-        function obj = LoadSettingsFromXML(obj)
-            xmlReader = XMLReader(obj.xmlFileName);
-            obj.xmlData = xmlReader.ReadXML();
+        function xmlData = LoadApplicationConfigFromXML(obj)
+            xmlReader = XMLReader(obj.xmlApplicationConfigFileName);
+            xmlData = xmlReader.ReadApplicationConfig();
         end
-        
-        function fullInputFileName = GetFullInputFileName(obj)
-            fullInputFileName = [obj.xmlData.BeginInputFileName obj.xmlData.InputFileName];
-        end
-        function fullOutputFolderName = GetFullOutputFolderName(obj)
-            fullOutputFolderName = [obj.xmlData.BeginOutputFolderName obj.xmlData.OutputFolderName];
-        end
-        function MakeOutputFolder(obj)
-            fullOutputFolderName = GetFullOutputFolderName(obj);
+        function MakeOutputFolder(obj, xmlData)
+            fullOutputFolderName = xmlData.GetFullOutputFolderName();
             mkdir(fullOutputFolderName);
+        end
+        function xmlData = LoadModelParametersFromXML(obj)
+            applicationConfig = ApplicationConfig.Instance();
+            xmlReader = XMLReader(applicationConfig.ModelParametersFileName);
+            xmlData = xmlReader.ReadModelParameters();
         end
         
     end

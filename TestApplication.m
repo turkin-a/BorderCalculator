@@ -1,7 +1,4 @@
 classdef TestApplication < handle
-    properties (Access = private)
-    end
-    
     methods
         function obj = TestApplication()
         end        
@@ -14,7 +11,6 @@ classdef TestApplication < handle
             xmlFileTest = XMLFileTest();
             resultXMLFileTest = run(xmlFileTest);
             table(resultXMLFileTest)
-            
         end
     end
     

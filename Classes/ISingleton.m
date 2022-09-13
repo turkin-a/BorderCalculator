@@ -1,5 +1,5 @@
 classdef ISingleton < handle
-   properties(Access=private)
+   properties(Access = private)
    end
    
    methods(Abstract, Static)

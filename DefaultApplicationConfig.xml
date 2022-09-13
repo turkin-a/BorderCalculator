@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<DefaultSettings_XMLWriterTest.xml version="1.2">
+<DefaultSettings.xml version="1.2">
   <InputFileName>SG_08_tmp2.mat</InputFileName>
   <OutputFolderName>Real1\</OutputFolderName>
   <BeginInputFileName>data\InputData\</BeginInputFileName>
   <BeginOutputFolderName>data\OutputData\</BeginOutputFolderName>
-  <FileNameSuffix>_XMLReaderTest</FileNameSuffix>
+  <FileNameSuffix>tmp1</FileNameSuffix>
   <ModelParametersFileName>DefaultModelParameters.xml</ModelParametersFileName>
-</DefaultSettings_XMLWriterTest.xml>
+</DefaultSettings.xml>
