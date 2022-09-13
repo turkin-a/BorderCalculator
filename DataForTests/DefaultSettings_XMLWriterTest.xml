@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<DefaultSettings_XMLWriterTest.xml version="1.0a">
+
+  <inputFileName>SG_08_tmp2.mat</inputFileName>
+
+  <beginInputFileName>data\InputData\</beginInputFileName>
+
+  <beginOutputFolderName>data\OutputData\</beginOutputFolderName>
+
+  <outputFolderName>Real3\</outputFolderName>
+
+  <fileNameSuffix>_XMLWriterTest</fileNameSuffix>
+
+</DefaultSettings_XMLWriterTest.xml>
