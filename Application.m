@@ -3,13 +3,14 @@ classdef Application < handle
         xmlApplicationConfigFileName (1,:) char = 'DefaultApplicationConfig.xml'
     end
     properties (Access = private)
+        seismicDataProcessor (1,1) ISeismicDataProcessor = SeismicDataProcessor()
     end
     
     properties (Dependent)
     end
     
     methods
-        function newObj = Application()
+        function obj = Application()
         end
     end
    
@@ -17,13 +18,13 @@ classdef Application < handle
         function obj = Run(obj)
             PrepereApplicationConfig(obj);
             PrepereModelParameters(obj);
-            
+            obj.seismicDataProcessor.Calculate();
         end
     end
     
     methods (Access = private)
         function PrepereApplicationConfig(obj)
-            AddPaths(obj);
+            obj.AddPaths();
             xmlData = LoadApplicationConfigFromXML(obj);
             MakeOutputFolder(obj, xmlData);
             MakeInstanceOfApplicationConfig(obj, xmlData);

@@ -1,11 +1,11 @@
 classdef ISingleton < handle
-   properties(Access = private)
-   end
+    properties(Access = public)
+    end
    
-   methods(Abstract, Static)
-      obj = Instance();
-   end
-   
-   methods
-   end
+    methods(Abstract, Static)
+        obj = Instance();
+    end
+
+    methods(Access = public)
+    end
 end
