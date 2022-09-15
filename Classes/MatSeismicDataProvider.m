@@ -2,7 +2,7 @@
 classdef MatSeismicDataProvider < ISeismicDataProvider
     properties (Access = private)
         isCalculatingPreparedInputSeismicData
-        fullInputFileName
+        fullInputFileName (1,:) char = []
     end
     properties (Access = public, Dependent)
     end

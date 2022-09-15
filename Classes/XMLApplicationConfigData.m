@@ -1,6 +1,6 @@
 classdef XMLApplicationConfigData
     properties (Access = private, Constant)
-        minDocumentVersion = '1.2'
+        minDocumentVersion char = '1.2'
     end
 
     properties (Access = private)

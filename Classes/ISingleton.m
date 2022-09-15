@@ -1,4 +1,4 @@
-classdef ISingleton < handle
+classdef(Abstract) ISingleton < handle & matlab.mixin.Heterogeneous
     properties(Access = public)
     end
    

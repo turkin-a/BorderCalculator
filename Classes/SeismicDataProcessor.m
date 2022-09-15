@@ -1,6 +1,6 @@
 classdef SeismicDataProcessor < ISeismicDataProcessor
     properties (Access = private)
-        seismicDataProvider {Validator.MustBeTypeOf(seismicDataProvider, 'ISeismicDataProvider')}
+        seismicDataProvider ISeismicDataProvider % {Validator.MustBeTypeOf(seismicDataProvider, 'ISeismicDataProvider')}
     end
     properties (Access = public, Dependent)
     end

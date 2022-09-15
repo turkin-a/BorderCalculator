@@ -1,4 +1,4 @@
-classdef ISeismicDataProcessor < handle
+classdef(Abstract) ISeismicDataProcessor < handle & matlab.mixin.Heterogeneous
     properties(Access = public, Abstract)
     end
 

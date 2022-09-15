@@ -1,4 +1,4 @@
-classdef ISeismogram < handle
+classdef(Abstract) ISeismogram < handle & matlab.mixin.Heterogeneous
 
     properties (Dependent, Abstract)
         SourceX

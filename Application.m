@@ -4,7 +4,7 @@ classdef Application < handle
     end
 
     properties (Access = private)
-        seismicDataProcessor {Validator.MustBeTypeOf(seismicDataProcessor, 'ISeismicDataProcessor')}
+        seismicDataProcessor ISeismicDataProcessor %{Validator.MustBeTypeOf(seismicDataProcessor, 'ISeismicDataProcessor')}
     end
 
     methods

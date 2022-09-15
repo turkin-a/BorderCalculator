@@ -1,6 +1,6 @@
 classdef ModelParameters  < ISingleton
     properties (Access = private)
-        isCalculatePreparedInputSeismicData = true
+        isCalculatePreparedInputSeismicData double = true
     end
 
     properties (Dependent, SetAccess = private)

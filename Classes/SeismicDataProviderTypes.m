@@ -1,7 +1,8 @@
 classdef(Enumeration) SeismicDataProviderTypes < int32
     enumeration
-        MatSeismicDataProviderType(0)
-        SegYSeismicDataProviderType(1)
+        NotDetermined(0)
+        MatSeismicDataProviderType(1)
+        SegYSeismicDataProviderType(2)
     end
     methods(Access = public, Static)
         function resultType = GetTypeByName(name)

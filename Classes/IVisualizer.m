@@ -1,4 +1,4 @@
-classdef IVisualizer < handle
+classdef(Abstract) IVisualizer < handle & matlab.mixin.Heterogeneous
     properties(Access = public, Abstract)
     end
 
