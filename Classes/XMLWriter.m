@@ -24,6 +24,7 @@ classdef XMLWriter < handle
             writeToFile(writer, obj.document, obj.xmlFullFileName);
         end
     end
+    
     methods (Access = private)
         function obj = appendElements(obj, xmlData)
             fieldNames = fieldnames(xmlData);

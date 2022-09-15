@@ -2,26 +2,25 @@ classdef Application < handle
     properties (Access = private, Constant)
         xmlApplicationConfigFileName (1,:) char = 'DefaultApplicationConfig.xml'
     end
+
     properties (Access = private)
-        seismicDataProcessor (1,1) ISeismicDataProcessor = SeismicDataProcessor()
+        seismicDataProcessor {Validator.MustBeTypeOf(seismicDataProcessor, 'ISeismicDataProcessor')}
     end
-    
-    properties (Dependent)
-    end
-    
+
     methods
         function obj = Application()
-        end
-    end
-   
-    methods (Access = public)
-        function obj = Run(obj)
             PrepereApplicationConfig(obj);
             PrepereModelParameters(obj);
+            obj.seismicDataProcessor = SeismicDataProcessor();
+        end
+    end
+
+    methods (Access = public)
+        function obj = Run(obj)
             obj.seismicDataProcessor.Calculate();
         end
     end
-    
+
     methods (Access = private)
         function PrepereApplicationConfig(obj)
             obj.AddPaths();
@@ -70,6 +69,5 @@ classdef Application < handle
             xmlReader = XMLReader(applicationConfig.ModelParametersFileName);
             xmlData = xmlReader.ReadModelParameters();
         end
-        
     end
 end

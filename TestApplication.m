@@ -3,17 +3,17 @@ classdef TestApplication < handle
         function obj = TestApplication()
         end        
     end
-   
+
     methods (Access = public)
         function obj = Run(obj)
             AddPaths(obj);
-            
+
             xmlFileTest = XMLFileTest();
             resultXMLFileTest = run(xmlFileTest);
             table(resultXMLFileTest)
         end
     end
-    
+
     methods (Access = private)
         function obj = AddPaths(obj)
             AddPathsOfClasses(obj);

@@ -28,6 +28,7 @@ classdef XMLReader < handle
             xmlData = ReadFieldNames(obj, docRootNode, xmlData);
         end
     end
+
     methods (Access = private)
         function xmlData = ReadFieldNames(obj, docRootNode, xmlData)
             documentVersion = ReadDocumentVersion(obj, docRootNode, xmlData);
@@ -42,7 +43,7 @@ classdef XMLReader < handle
         function documentVersion = ReadDocumentVersion(obj, docRootNode, xmlData)
             documentVersion = docRootNode.getAttribute('version');
             if IsDocumentVersionGood(obj, documentVersion, xmlData) == false
-                msgID = 'XMLReader:OldVersion';
+                msgID = 'XMLReader:OldFileVersion';
                 msgtext = ['Old version of file. This version of this file "' obj.xmlFullFileName '" is not supported. Minimum version is ' num2str(documentVersion)];
                 ME = MException(msgID,msgtext);
                 throw(ME);

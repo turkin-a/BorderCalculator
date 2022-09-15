@@ -1,7 +1,7 @@
 classdef IVisualizer < handle
     properties(Access = public, Abstract)
     end
-   
+
     methods(Static, Abstract)
     end
 

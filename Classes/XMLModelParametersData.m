@@ -2,9 +2,11 @@ classdef XMLModelParametersData
     properties (Access = private, Constant)
         minDocumentVersion = '0.1'
     end 
+    
     properties (Access = private)
         documentVersion (1,:) char = []
     end    
+    
     properties (Access = public)
         IsCalculatingPreparedInputSeismicData (1,:) char = []
     end

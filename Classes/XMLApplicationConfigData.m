@@ -1,10 +1,12 @@
 classdef XMLApplicationConfigData
     properties (Access = private, Constant)
         minDocumentVersion = '1.2'
-    end 
+    end
+
     properties (Access = private)
         documentVersion (1,:) char = []
-    end    
+    end
+
     properties (Access = public)
         InputFileName (1,:) char = []
         OutputFolderName (1,:) char = []
@@ -12,6 +14,8 @@ classdef XMLApplicationConfigData
         BeginOutputFolderName (1,:) char = []
         FileNameSuffix (1,:) char = []
         ModelParametersFileName (1,:) char = []
+        SeismicDataProviderTypeName (1,:) char = []
+        IsCalculatingPreparedInputSeismicData (1,:) char = []
     end
 
     methods (Access = public)

@@ -6,4 +6,6 @@
   <BeginOutputFolderName>data\OutputData\</BeginOutputFolderName>
   <FileNameSuffix>_XMLWriterTest</FileNameSuffix>
   <ModelParametersFileName>DefaultModelParameters.xml</ModelParametersFileName>
+  <SeismicDataProviderTypeName>MatSeismicDataProviderType</SeismicDataProviderTypeName>
+  <IsCalculatingPreparedInputSeismicData>1</IsCalculatingPreparedInputSeismicData>
 </DefaultSettings_XMLWriterTest.xml>

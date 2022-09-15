@@ -2,13 +2,13 @@ classdef ModelParameters  < ISingleton
     properties (Access = private)
         isCalculatePreparedInputSeismicData = true
     end
-    
+
     properties (Dependent, SetAccess = private)
         IsCalculatingPreparedInputSeismicData
     end
-    
+
     methods
-        function newObj = ModelParameters()
+        function obj = ModelParameters()
         end
     end
 
@@ -23,7 +23,7 @@ classdef ModelParameters  < ISingleton
             obj.isCalculatePreparedInputSeismicData = isCalculatePreparedInputSeismicData;
         end
     end
-        
+  
     methods (Access = public)
         function obj = SetSettings(obj, xmlData)
             fieldNames = fieldnames(xmlData);
@@ -32,9 +32,6 @@ classdef ModelParameters  < ISingleton
                 obj.(fieldName) = xmlData.(fieldName);
             end
         end
-    end
-    methods (Access = private)
-
     end
 
     methods(Static)
