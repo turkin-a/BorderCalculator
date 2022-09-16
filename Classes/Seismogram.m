@@ -2,7 +2,7 @@ classdef Seismogram < ISeismogram & matlab.mixin.Copyable
     properties (Access = private)
         sourceX (1,1) double
         sensorsX (1,:) double = []
-        seismicTraces (:,1) cell = []
+        seismicTraces (:,1) SeismicTrace
         numberOfSensors (1,1) double = 0
         numberOfSamplesPerTrace (1,1) double = 0
         firstTimes (1,:) double = []
@@ -34,8 +34,8 @@ classdef Seismogram < ISeismogram & matlab.mixin.Copyable
 
         function set.Traces(obj, traces)
             obj.seismicTraces = traces;
-            obj.numberOfSensors = length(traces);
-            obj.numberOfSamplesPerTrace = obj.seismicTraces{1}.NumberOfSamplesPerTrace;
+            obj.numberOfSensors = size(obj.seismicTraces,1);
+            obj.numberOfSamplesPerTrace = obj.seismicTraces(1).NumberOfSamplesPerTrace;
         end
         function seismicTraces = get.Traces(obj)
             seismicTraces = obj.seismicTraces;
@@ -63,9 +63,9 @@ classdef Seismogram < ISeismogram & matlab.mixin.Copyable
       function cpObj = copyElement(obj)
          % Make a shallow copy of all four properties
          cpObj = copyElement@matlab.mixin.Copyable(obj);
-         % Make a deep copy of the DeepCp object
+         % Make a deep copy of the seismicTraces object
          for i = 1:1:length(obj.seismicTraces)
-             cpObj.seismicTraces{i} = copy(obj.seismicTraces{i});
+             cpObj.seismicTraces(i) = copy(obj.seismicTraces(i));
          end
       end
    end
@@ -73,13 +73,13 @@ classdef Seismogram < ISeismogram & matlab.mixin.Copyable
     methods (Static)
         function seismogram = BuildSeismogram(seisData, sourceX, sensorsX)
             seismogram = Seismogram();
-            numberOfSensors = 3;
-            traces = cell(numberOfSensors, 1);
+            numberOfSensors = length(sensorsX);
+            traces(1:numberOfSensors,1) = SeismicTrace();
             for j = 1:1:numberOfSensors
                 trace = seisData(j,:);
                 seismicTrace = SeismicTrace();
                 seismicTrace.Samples = trace;
-                traces{j} = seismicTrace;
+                traces(j,1) = seismicTrace;
             end
             seismogram.SourceX = sourceX;
             seismogram.SensorsX = sensorsX;

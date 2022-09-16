@@ -3,9 +3,9 @@ classdef ApplicationConfig < ISingleton
         fullInputFileName (1,:) char = []
         fullOutputFolderName (1,:) char = []
         fileNameSuffix (1,:) char = []
-        modelParametersFileName = []
-        seismicDataProviderType SeismicDataProviderTypes
-        isCalculatingPreparedInputSeismicData (1,1) double
+        modelParametersFileName (1,:) char = []
+        seismicDataProviderType (1,1) SeismicDataProviderTypes
+        isCalculatingPreparedInputSeismicData (1,1) double = 1
     end
 
     properties (Dependent, SetAccess = private)

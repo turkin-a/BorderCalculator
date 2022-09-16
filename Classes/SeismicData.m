@@ -1,6 +1,6 @@
 classdef SeismicData < handle & matlab.mixin.Copyable
     properties (Access = private)
-        seismograms cell = []
+        seismograms (:,1) Seismogram
         numberOfSeismograms double {mustBeNonnegative(numberOfSeismograms)}
         numberOfSamplesPerSec double {mustBeNonnegative(numberOfSamplesPerSec)}
         numberOfSamplesPerTrace double {mustBeNonnegative(numberOfSamplesPerTrace)}
@@ -41,32 +41,31 @@ classdef SeismicData < handle & matlab.mixin.Copyable
         end
     end
 
-    methods (Access = public)
-        
-%         % Нормализовать сейсмические данные
-%         function obj = Normalization(obj, sizeOfHalfWindow)
-%             for i = 1:1:length(obj.Seismograms)
-%                 seismogram = obj.Seismograms{i};
-% 
-%                 seismogram.Normalization(sizeOfHalfWindow);
-%                 firstTimes = seismogram.FirstTimes;
-%                 obj.seismograms{i} = seismogram;
-%             end
-%         end
+    methods(Access = protected)
+      % Override copyElement method:
+      function cpObj = copyElement(obj)
+         % Make a shallow copy of all four properties
+         cpObj = copyElement@matlab.mixin.Copyable(obj);
+         % Make a deep copy of the seismograms object
+         for i = 1:1:length(obj.seismograms)
+             cpObj.seismograms(i) = copy(obj.seismograms(i));
+         end
+      end
     end
+
     methods (Access = public, Static)
         function outputSeismicData = BuildSeismicData(seismicDataFromMatFile)
             outputSeismicData = SeismicData();
             outputSeismicData.NumberSamplesPerSec = seismicDataFromMatFile.discret;
             outputSeismicData.NumberOfSamplesPerTrace = seismicDataFromMatFile.SampPerTrace;
             numberOfSeis = length(seismicDataFromMatFile.Seis);
-            seismograms = cell(1, numberOfSeis);
+            seismograms(1:numberOfSeis,1) = Seismogram();
             for i = 1:1:numberOfSeis
                 curSeisData = seismicDataFromMatFile.Seis{i};
                 curSourceX = seismicDataFromMatFile.mDetonX(i);
                 curSensorsX = seismicDataFromMatFile.mXd{i};
                 seismogram = Seismogram.BuildSeismogram(curSeisData, curSourceX, curSensorsX);
-                seismograms{i} = seismogram;
+                seismograms(i,1) = seismogram;
             end
             outputSeismicData.Seismograms = seismograms;
         end

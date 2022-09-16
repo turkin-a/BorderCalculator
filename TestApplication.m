@@ -10,8 +10,8 @@ classdef TestApplication < handle
             RunXMLFileTest(obj);
             RunSeismicTraceTest(obj);
             RunSeismogramTest(obj);
+            RunSeismicDataTest(obj);
         end
-        
     end
 
     methods (Access = private)
@@ -29,6 +29,11 @@ classdef TestApplication < handle
             seismogramTest = SeismogramTest();
             resultSeismogramTest = run(seismogramTest);
             table(resultSeismogramTest)
+        end
+        function RunSeismicDataTest(obj)
+            seismicDataTest = SeismicDataTest();
+            resultSeismicDataTest = run(seismicDataTest);
+            table(resultSeismicDataTest)
         end
 
         function obj = AddPaths(obj)

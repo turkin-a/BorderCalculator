@@ -1,6 +1,6 @@
 classdef XMLModelParametersData
     properties (Access = private, Constant)
-        minDocumentVersion char = '0.1'
+        minDocumentVersion (1,:) char = '0.1'
     end
 
     properties (Access = private)
