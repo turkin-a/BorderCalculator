@@ -1,19 +1,19 @@
 classdef Seismogram < ISeismogram & matlab.mixin.Copyable
     properties (Access = private)
-        sourceX   double = []
-        sensorsX double = []
-        seismicTraces cell = []
-        countSensors double = 0
-        countSamplesPerTrace double = 0
-        firstTimes double = []
+        sourceX (1,1) double
+        sensorsX (1,:) double = []
+        seismicTraces (:,1) cell = []
+        numberOfSensors (1,1) double = 0
+        numberOfSamplesPerTrace (1,1) double = 0
+        firstTimes (1,:) double = []
     end
 
     properties (Dependent)
         SourceX
         SensorsX
-        Traces 
-        CountSensors
-        CountSamplesPerTrace
+        Traces
+        NumberOfSensors
+        NumberOfSamplesPerTrace
         FirstTimes
     end
 
@@ -34,19 +34,19 @@ classdef Seismogram < ISeismogram & matlab.mixin.Copyable
 
         function set.Traces(obj, traces)
             obj.seismicTraces = traces;
-            obj.countSensors = length(traces);
-            obj.countSamplesPerTrace = obj.seismicTraces{1}.CountSamplesPerTrace;
-        end        
+            obj.numberOfSensors = length(traces);
+            obj.numberOfSamplesPerTrace = obj.seismicTraces{1}.NumberOfSamplesPerTrace;
+        end
         function seismicTraces = get.Traces(obj)
             seismicTraces = obj.seismicTraces;
         end
 
-        function countSensors = get.CountSensors(obj)
-            countSensors = obj.countSensors;
+        function countSensors = get.NumberOfSensors(obj)
+            countSensors = obj.numberOfSensors;
         end
 
-        function countSamplesPerTrace = get.CountSamplesPerTrace(obj)
-            countSamplesPerTrace = obj.countSamplesPerTrace;
+        function numberOfSamplesPerTrace = get.NumberOfSamplesPerTrace(obj)
+            numberOfSamplesPerTrace = obj.numberOfSamplesPerTrace;
         end
 
         function set.FirstTimes(obj, firstTimes)
@@ -57,15 +57,25 @@ classdef Seismogram < ISeismogram & matlab.mixin.Copyable
         end
     end
 
+
+    methods(Access = protected)
+      % Override copyElement method:
+      function cpObj = copyElement(obj)
+         % Make a shallow copy of all four properties
+         cpObj = copyElement@matlab.mixin.Copyable(obj);
+         % Make a deep copy of the DeepCp object
+         for i = 1:1:length(obj.seismicTraces)
+             cpObj.seismicTraces{i} = copy(obj.seismicTraces{i});
+         end
+      end
+   end
+
     methods (Static)
-        % Создание объекта Seismogram с параметрами 
-        % seisData (трассы в двумерном массиве)
-        % sourceX, sensorsX
         function seismogram = BuildSeismogram(seisData, sourceX, sensorsX)
             seismogram = Seismogram();
-            countSensors = size(seisData,1);
-            traces = cell(countSensors, 1);
-            for j = 1:1:countSensors
+            numberOfSensors = 3;
+            traces = cell(numberOfSensors, 1);
+            for j = 1:1:numberOfSensors
                 trace = seisData(j,:);
                 seismicTrace = SeismicTrace();
                 seismicTrace.Samples = trace;
@@ -75,9 +85,6 @@ classdef Seismogram < ISeismogram & matlab.mixin.Copyable
             seismogram.SensorsX = sensorsX;
             seismogram.Traces = traces;
         end
-    end
-
-    methods (Access = public)
     end
 end
 

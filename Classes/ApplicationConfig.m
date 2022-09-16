@@ -25,22 +25,22 @@ classdef ApplicationConfig < ISingleton
             fullOutputFolderName = obj.fullOutputFolderName;
         end
         function fileNameSuffix = get.FileNameSuffix(obj)
-            fileNameSuffix =  obj.fileNameSuffix;            
+            fileNameSuffix =  obj.fileNameSuffix;
         end
         function modelParametersFileName = get.ModelParametersFileName(obj)
-            modelParametersFileName =  obj.modelParametersFileName;            
+            modelParametersFileName =  obj.modelParametersFileName;
         end
         function seismicDataProviderType = get.SeismicDataProviderType(obj)
-            seismicDataProviderType =  obj.seismicDataProviderType;            
+            seismicDataProviderType =  obj.seismicDataProviderType;
         end
         function isCalculatingPreparedInputSeismicData = get.IsCalculatingPreparedInputSeismicData(obj)
-            isCalculatingPreparedInputSeismicData =  obj.isCalculatingPreparedInputSeismicData;            
+            isCalculatingPreparedInputSeismicData =  obj.isCalculatingPreparedInputSeismicData;
         end
     end
-    
+
     methods(Access = protected)
-      function newObj = ApplicationConfig()
-      end
+        function newObj = ApplicationConfig()
+        end
     end
 
     methods (Access = public)
@@ -55,14 +55,14 @@ classdef ApplicationConfig < ISingleton
     end
 
     methods(Static)
-      function obj = Instance()
-         persistent uniqueInstance
-         if isempty(uniqueInstance)
-            obj = ApplicationConfig();
-            uniqueInstance = obj;
-         else
-            obj = uniqueInstance;
-         end
-      end
+        function obj = Instance()
+            persistent uniqueInstance
+            if isempty(uniqueInstance)
+                obj = ApplicationConfig();
+                uniqueInstance = obj;
+            else
+                obj = uniqueInstance;
+            end
+        end
     end
 end

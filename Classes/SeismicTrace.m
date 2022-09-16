@@ -1,11 +1,11 @@
 classdef SeismicTrace < handle & matlab.mixin.Copyable
     properties (Access = private)
-        samples double = []
+        samples (1,:) double = []
     end
 
     properties (Dependent)
         Samples
-        CountSamplesPerTrace
+        NumberOfSamplesPerTrace
     end
 
     methods
@@ -15,9 +15,9 @@ classdef SeismicTrace < handle & matlab.mixin.Copyable
         function samples = get.Samples(obj)
             samples = obj.samples;
         end
-        
-        function countSamplesPerTrace = get.CountSamplesPerTrace(obj)
-            countSamplesPerTrace = length(obj.samples);
+
+        function numberOfSamplesPerTrace = get.NumberOfSamplesPerTrace(obj)
+            numberOfSamplesPerTrace = length(obj.samples);
         end
     end
 
@@ -25,7 +25,7 @@ classdef SeismicTrace < handle & matlab.mixin.Copyable
         function obj = SeismicTrace()
         end
     end
-    
+
     methods (Access = private)
     end
 end

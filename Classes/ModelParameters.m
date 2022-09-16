@@ -23,7 +23,7 @@ classdef ModelParameters  < ISingleton
             obj.isCalculatePreparedInputSeismicData = isCalculatePreparedInputSeismicData;
         end
     end
-  
+
     methods (Access = public)
         function obj = SetSettings(obj, xmlData)
             fieldNames = fieldnames(xmlData);
@@ -35,14 +35,14 @@ classdef ModelParameters  < ISingleton
     end
 
     methods(Static)
-      function obj = Instance()
-         persistent uniqueInstance
-         if isempty(uniqueInstance)
-            obj = ModelParameters();
-            uniqueInstance = obj;
-         else
-            obj = uniqueInstance;
-         end
-      end
-   end
+        function obj = Instance()
+            persistent uniqueInstance
+            if isempty(uniqueInstance)
+                obj = ModelParameters();
+                uniqueInstance = obj;
+            else
+                obj = uniqueInstance;
+            end
+        end
+    end
 end

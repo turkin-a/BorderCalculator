@@ -1,4 +1,4 @@
-classdef Validator    
+classdef Validator
     methods(Access = public, Static)
         function MustBeTypeOf(value, typeClass)
             if ~isempty(value)

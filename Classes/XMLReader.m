@@ -7,14 +7,14 @@ classdef XMLReader < handle
         function obj = XMLReader(xmlFullFileName)
             obj.xmlFullFileName = xmlFullFileName;
             import matlab.io.xml.dom.*
-        end        
+        end
     end
 
     methods (Access = public)
         function xmlData = ReadApplicationConfig(obj)
             parser = matlab.io.xml.dom.Parser();
             doc = parseFile(parser, obj.xmlFullFileName);
-            
+
             xmlData = XMLApplicationConfigData();
             docRootNode = doc.getDocumentElement();
             xmlData = ReadFieldNames(obj, docRootNode, xmlData);
@@ -22,7 +22,7 @@ classdef XMLReader < handle
         function xmlData = ReadModelParameters(obj)
             parser = matlab.io.xml.dom.Parser();
             doc = parseFile(parser, obj.xmlFullFileName);
-            
+
             xmlData = XMLModelParametersData();
             docRootNode = doc.getDocumentElement();
             xmlData = ReadFieldNames(obj, docRootNode, xmlData);
@@ -44,7 +44,8 @@ classdef XMLReader < handle
             documentVersion = docRootNode.getAttribute('version');
             if IsDocumentVersionGood(obj, documentVersion, xmlData) == false
                 msgID = 'XMLReader:OldFileVersion';
-                msgtext = ['Old version of file. This version of this file "' obj.xmlFullFileName '" is not supported. Minimum version is ' num2str(documentVersion)];
+                msgtext = ['Old version of file. This version of this file "' obj.xmlFullFileName ...
+                           '" is not supported. Minimum version is ' num2str(documentVersion)];
                 ME = MException(msgID,msgtext);
                 throw(ME);
             end

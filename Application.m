@@ -4,7 +4,7 @@ classdef Application < handle
     end
 
     properties (Access = private)
-        seismicDataProcessor ISeismicDataProcessor %{Validator.MustBeTypeOf(seismicDataProcessor, 'ISeismicDataProcessor')}
+        seismicDataProcessor ISeismicDataProcessor
     end
 
     methods
@@ -30,7 +30,7 @@ classdef Application < handle
         end
         function PrepereModelParameters(obj)
             xmlData = LoadModelParametersFromXML(obj);
-            MakeInstanceOfModelParameters(obj, xmlData);   
+            MakeInstanceOfModelParameters(obj, xmlData);
         end
         function obj = AddPaths(obj)
             AddPathsOfClasses(obj);

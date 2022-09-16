@@ -21,20 +21,8 @@ classdef SeismicDataFileReader < IFileReader
     end
 
     methods(Access = private)
-        function outputSeismicData = GetOutputSeismicData(obj, loadResult)
-            outputSeismicData = SeismicData();
-            outputSeismicData.SamplingPerSec = loadResult.discret;
-            outputSeismicData.SamplingPerTrace = loadResult.SampPerTrace;
-            countSeis = length(loadResult.Seis);
-            seismograms = cell(1, countSeis);
-            for i = 1:1:countSeis
-                curSeisData = loadResult.Seis{i};
-                curSourceX = loadResult.mDetonX(i);
-                curSensorsX = loadResult.mXd{i};
-                seismogram = BuildSeismogram(obj, curSeisData, curSourceX, curSensorsX);
-                seismograms{i} = seismogram;
-            end
-            outputSeismicData.Seismograms = seismograms;
+        function outputSeismicData = GetOutputSeismicData(obj, seismicDataFromMatFile)
+            outputSeismicData = SeismicData.BuildSeismicData(seismicDataFromMatFile);
         end
         function seismogram = BuildSeismogram(obj, curSeisData, curSourceX, curSensorsX)
             seismogram = Seismogram.BuildSeismogram(curSeisData, curSourceX, curSensorsX);

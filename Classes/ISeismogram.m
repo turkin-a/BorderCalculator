@@ -3,9 +3,9 @@ classdef(Abstract) ISeismogram < handle & matlab.mixin.Heterogeneous
     properties (Dependent, Abstract)
         SourceX
         SensorsX
-        Traces 
-        CountSensors
-        CountSamplesPerTrace
+        Traces
+        NumberOfSensors
+        NumberOfSamplesPerTrace
         FirstTimes
     end
 

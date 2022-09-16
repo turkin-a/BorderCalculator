@@ -24,11 +24,11 @@ classdef XMLFileTest < matlab.unittest.TestCase
         end
         function XMLWriterTest(testCase)
             expXMLData = XMLFileTest.GetWriterExpampleXMLData();
-            
+
             xmlFileName = 'DataForTests\DefaultSettings_XMLWriterTest.xml';
             xmlWriter = XMLWriter(xmlFileName);
             xmlWriter.WriteApplicationConfig(expXMLData);
-            
+
             xmlReader = XMLReader(xmlFileName);
             xmlWriterData = xmlReader.ReadApplicationConfig();
             testCase.verifyEqual(xmlWriterData, expXMLData);
@@ -37,11 +37,11 @@ classdef XMLFileTest < matlab.unittest.TestCase
             expXMLData = XMLFileTest.GetWriterExpampleXMLData();
             expApplicationConfig = ApplicationConfigTest.GetNewInstance();
             expApplicationConfig.SetSettings(expXMLData);
-            
+
             xmlFileName = 'DataForTests\DefaultSettings_XMLWriterTest.xml';
             xmlWriter = XMLWriter(xmlFileName);
             xmlWriter.WriteApplicationConfig(expXMLData);
-            
+
             xmlReader = XMLReader(xmlFileName);
             xmlWriterData = xmlReader.ReadApplicationConfig();
             readedApplicationConfig = ApplicationConfigTest.GetNewInstance();

@@ -7,14 +7,30 @@ classdef TestApplication < handle
     methods (Access = public)
         function obj = Run(obj)
             AddPaths(obj);
-
-            xmlFileTest = XMLFileTest();
-            resultXMLFileTest = run(xmlFileTest);
-            table(resultXMLFileTest)
+            RunXMLFileTest(obj);
+            RunSeismicTraceTest(obj);
+            RunSeismogramTest(obj);
         end
+        
     end
 
     methods (Access = private)
+        function RunXMLFileTest(obj)
+            xmlFileTest = XMLFileTest();            
+            resultXMLFileTest = run(xmlFileTest);
+            table(resultXMLFileTest)
+        end
+        function RunSeismicTraceTest(obj)
+            seismicTraceTest = SeismicTraceTest();
+            resultSeismicTraceTest = run(seismicTraceTest);
+            table(resultSeismicTraceTest)
+        end
+        function RunSeismogramTest(obj)
+            seismogramTest = SeismogramTest();
+            resultSeismogramTest = run(seismogramTest);
+            table(resultSeismogramTest)
+        end
+
         function obj = AddPaths(obj)
             AddPathsOfClasses(obj);
         end
