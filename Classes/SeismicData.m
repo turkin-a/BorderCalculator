@@ -17,6 +17,7 @@ classdef SeismicData < handle & matlab.mixin.Copyable
         function set.NumberSamplesPerSec(obj, numberOfSamplesPerSec)
             obj.numberOfSamplesPerSec = numberOfSamplesPerSec;
         end
+
         function numberOfSamplesPerSec = get.NumberSamplesPerSec(obj)
             numberOfSamplesPerSec = obj.numberOfSamplesPerSec;
         end
@@ -24,6 +25,7 @@ classdef SeismicData < handle & matlab.mixin.Copyable
         function set.NumberOfSamplesPerTrace(obj, numberOfSamplesPerTrace)
             obj.numberOfSamplesPerTrace = numberOfSamplesPerTrace;
         end
+
         function numberOfSamplesPerTrace = get.NumberOfSamplesPerTrace(obj)
             numberOfSamplesPerTrace = obj.numberOfSamplesPerTrace;
         end
@@ -32,12 +34,21 @@ classdef SeismicData < handle & matlab.mixin.Copyable
             obj.seismograms = seismograms;
             obj.numberOfSeismograms = length(seismograms);
         end
+
         function seismograms = get.Seismograms(obj)
             seismograms = obj.seismograms;
         end
 
         function numberOfSeismograms = get.NumberOfSeismograms(obj)
             numberOfSeismograms = obj.numberOfSeismograms;
+        end
+
+        % Рассчитать первые вступления на всех сейсмограммах
+        function obj = CalculateFirstTimes(obj, span, minTraceAmplitude)
+            for i = 1:1:length(obj.seismograms)
+                seismogram = obj.seismograms(i);
+                seismogram.CalculateFirstTimes(span, minTraceAmplitude);
+            end
         end
     end
 

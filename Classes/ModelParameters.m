@@ -1,10 +1,12 @@
 classdef ModelParameters  < ISingleton
     properties (Access = private)
-        isCalculatePreparedInputSeismicData double = true
+        spanForFirstTimes
+        minTraceAmpForFirstTimes
     end
 
     properties (Dependent, SetAccess = private)
-        IsCalculatingPreparedInputSeismicData
+        SpanForFirstTimes
+        MinTraceAmpForFirstTimes
     end
 
     methods
@@ -13,21 +15,31 @@ classdef ModelParameters  < ISingleton
     end
 
     methods
-        function isCalculatePreparedInputSeismicData = get.IsCalculatingPreparedInputSeismicData(obj)
-            isCalculatePreparedInputSeismicData = obj.isCalculatePreparedInputSeismicData;
+        function spanForFirstTimes = get.SpanForFirstTimes(obj)
+            spanForFirstTimes = obj.spanForFirstTimes;
         end
-        function set.IsCalculatingPreparedInputSeismicData(obj, isCalculatePreparedInputSeismicData)
-            if ischar(isCalculatePreparedInputSeismicData)
-                isCalculatePreparedInputSeismicData = str2double(isCalculatePreparedInputSeismicData);
+        function set.SpanForFirstTimes(obj, spanForFirstTimes)
+            if ischar(spanForFirstTimes)
+                spanForFirstTimes = str2double(spanForFirstTimes);
             end
-            obj.isCalculatePreparedInputSeismicData = isCalculatePreparedInputSeismicData;
+            obj.spanForFirstTimes = spanForFirstTimes;
+        end
+
+        function minTraceAmpForFirstTimes = get.MinTraceAmpForFirstTimes(obj)
+            minTraceAmpForFirstTimes = obj.minTraceAmpForFirstTimes;
+        end
+        function set.MinTraceAmpForFirstTimes(obj, minTraceAmpForFirstTimes)
+            if ischar(minTraceAmpForFirstTimes)
+                minTraceAmpForFirstTimes = str2double(minTraceAmpForFirstTimes);
+            end
+            obj.minTraceAmpForFirstTimes = minTraceAmpForFirstTimes;
         end
     end
 
     methods (Access = public)
         function obj = SetSettings(obj, xmlData)
             fieldNames = fieldnames(xmlData);
-            for i = 1:1:length(xmlData)
+            for i = 1:1:length(fieldNames)
                 fieldName = fieldNames{i};
                 obj.(fieldName) = xmlData.(fieldName);
             end

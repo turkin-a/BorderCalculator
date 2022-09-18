@@ -8,7 +8,8 @@ classdef XMLModelParametersData
     end
 
     properties (Access = public)
-        IsCalculatingPreparedInputSeismicData (1,:) char = []
+        SpanForFirstTimes (1,:) char = []
+        MinTraceAmpForFirstTimes (1,:) char = []
     end
 
     methods (Access = public)

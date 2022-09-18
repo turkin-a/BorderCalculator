@@ -1,4 +1,4 @@
-classdef(Abstract) IVisualizer < handle & matlab.mixin.Heterogeneous
+classdef(Abstract) IVisualizer < ISingleton
     properties(Access = public, Abstract)
     end
 

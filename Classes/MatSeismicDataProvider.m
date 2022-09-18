@@ -2,6 +2,8 @@
 classdef MatSeismicDataProvider < ISeismicDataProvider
     properties (Access = private)
         isCalculatingPreparedInputSeismicData
+        seismicDataFileReader SeismicDataFileReader
+        seismicDataPreparer SeismicDataPreparer
         fullInputFileName (1,:) char = []
     end
     properties (Access = public, Dependent)
@@ -18,16 +20,23 @@ classdef MatSeismicDataProvider < ISeismicDataProvider
         function seismicData = GetSeismicData(obj)
             seismicData = [];
             if obj.isCalculatingPreparedInputSeismicData == true
-                ReadSeismicData(obj);
+                initialInputSeismicData = ReadSeismicData(obj);
+                preparedInputSeismicData = PrepareSeismicData(obj, initialInputSeismicData);
             end
         end
     end
 
     methods (Access = private)
-        function seismicData = ReadSeismicData(obj)
-            seismicData = [];
-            seismicDataFileReader = SeismicDataFileReader(obj.fullInputFileName);
-            initialInputSeismicData = seismicDataFileReader.Read();
+        function initialInputSeismicData = ReadSeismicData(obj)
+            obj.seismicDataFileReader = SeismicDataFileReader(obj.fullInputFileName);
+            initialInputSeismicData = obj.seismicDataFileReader.Read();
+        end
+        function preparedInputSeismicData = PrepareSeismicData(obj, initialInputSeismicData)
+            obj.seismicDataPreparer = SeismicDataPreparer();
+            obj.seismicDataPreparer.InitialSeismicData = initialInputSeismicData;
+            obj.seismicDataPreparer.SpanForFirstTimes
+            obj.seismicDataPreparer.MinTraceAmpForFirstTimes
+            preparedInputSeismicData = obj.seismicDataPreparer.Prepare();
         end
     end
 end

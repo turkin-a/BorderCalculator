@@ -6,7 +6,7 @@ classdef SeismicDataFileReader < IFileReader
     methods(Access = public)
         function obj = SeismicDataFileReader(fileName)
             obj.fileName = fileName;
-        end 
+        end
 
         function outputSeismicData = Read(obj)
             loadResult = load(obj.fileName);
