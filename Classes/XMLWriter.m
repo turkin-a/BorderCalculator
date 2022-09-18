@@ -34,6 +34,7 @@ classdef XMLWriter < handle
                 appendElement(obj, fieldName, fieldValue);
             end
         end
+
         function obj = appendElement(obj, elementName, elementValue)
             docRootNode = getDocumentElement(obj.document);
             newElement = createElement(obj.document, elementName);

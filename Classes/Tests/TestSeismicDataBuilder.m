@@ -17,6 +17,7 @@ classdef TestSeismicDataBuilder < handle
             seismicData.NumberSamplesPerSec = obj.numberSamplesPerSec;
             seismicData.NumberOfSamplesPerTrace = obj.numberSamplesPerTrace;
         end
+
         function seismogram = GetSeismogram(obj)
             seismogram = Seismogram();
             traces(1:obj.numberOfSensors,1) = SeismicTrace();
@@ -28,11 +29,13 @@ classdef TestSeismicDataBuilder < handle
             seismogram.SensorsX = GetSensorsX(obj);
             seismogram.Traces = traces;
         end
+
         function seismicTrace = GetSeismicTrace(obj)
             seismicTrace = SeismicTrace();
             samples = 1:1:obj.numberSamplesPerTrace;
             seismicTrace.Samples = samples;
         end
+
         function seismicDataForMatFile = GetSeismicDataForMatFile(obj)
             seismicDataForMatFile.SampPerTrace = obj.numberSamplesPerTrace;
             seismicDataForMatFile.discret = obj.numberSamplesPerSec;
@@ -52,15 +55,19 @@ classdef TestSeismicDataBuilder < handle
                 seismogramForMatFile(indexOfTrace,:) = trace;
             end
         end
+
         function sourcesX = GetSourcesX(obj)
             sourcesX = zeros(1,obj.numberOfSensors) + GetSourceX(obj);
         end
+
         function sourceX = GetSourceX(obj)
             sourceX = obj.sensorDistance;
         end
+
         function sensorsX = GetSensorsX(obj)
             sensorsX = (1:1:obj.numberOfSensors) * obj.sensorDistance;
         end
+
         function sensorsZ = GetSensorsZ(obj)
             sensorsZ = (1:1:obj.numberOfSensors) * 0;
         end

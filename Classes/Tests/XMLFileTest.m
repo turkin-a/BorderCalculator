@@ -3,6 +3,7 @@ classdef XMLFileTest < matlab.unittest.TestCase
         xmlReadFileName  = 'DataForTests\DefaultSettings_XMLReaderTest.xml'
         xmlWriteFileName = 'DataForTests\DefaultSettings_XMLWriterTest.xml'
     end
+
     methods(Test)
         function XMLReaderTest(testCase)
             % Arrange
@@ -26,6 +27,7 @@ classdef XMLFileTest < matlab.unittest.TestCase
             % Assert
             testCase.verifyEqual(readedApplicationConfig, expApplicationConfig);
         end
+
         function XMLWriterTest(testCase)
             % Arrange
             expXMLData = XMLFileTest.GetWriterExpampleXMLData();
@@ -66,6 +68,7 @@ classdef XMLFileTest < matlab.unittest.TestCase
             expXMLData.SeismicDataProviderTypeName = 'MatSeismicDataProviderType';
             expXMLData.IsCalculatingPreparedInputSeismicData = '1';
         end
+
         function expXMLData = GetWriterExpampleXMLData()
             expXMLData = XMLApplicationConfigData();
             expXMLData.BeginInputFileName = 'data\InputData\';

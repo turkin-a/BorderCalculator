@@ -3,6 +3,7 @@ classdef SeismicDataFileReaderTest < matlab.unittest.TestCase
         testSeismicDataBuilder TestSeismicDataBuilder = TestSeismicDataBuilder()
         xmlReadFileName = 'DataForTests\ReadSeismicDataFromMatFileTest.mat'
     end
+
     methods(Test)
         function ReadSeismicDataFromMatFileTest(testCase)
             % Arrange

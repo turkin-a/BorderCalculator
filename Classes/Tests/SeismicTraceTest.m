@@ -2,6 +2,7 @@ classdef SeismicTraceTest < matlab.unittest.TestCase
     properties
         testSeismicDataBuilder TestSeismicDataBuilder = TestSeismicDataBuilder()
     end
+
     methods(Test)
         function ChangeOneObjectTest(testCase)
             % Arrange

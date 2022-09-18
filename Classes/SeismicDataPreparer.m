@@ -3,14 +3,12 @@ classdef SeismicDataPreparer < handle
         initialSeismicData (1,1) SeismicData
         spanForFirstTimes
         minTraceAmpForFirstTimes
-%         sizeOfHalfWindowForNormalization
     end
 
     properties (Dependent)
         InitialSeismicData
         SpanForFirstTimes
         MinTraceAmpForFirstTimes
-%         SizeOfHalfWindowForNormalization
     end
 
     methods
@@ -18,7 +16,6 @@ classdef SeismicDataPreparer < handle
             modelParameters = ModelParameters.Instance();
             obj.spanForFirstTimes = modelParameters.SpanForFirstTimes;
             obj.minTraceAmpForFirstTimes = modelParameters.MinTraceAmpForFirstTimes;
-%             obj.sizeOfHalfWindowForNormalization = sizeOfHalfWindowForNormalization;
         end
 
         function initialSeismicData = get.InitialSeismicData(obj)
@@ -43,11 +40,8 @@ classdef SeismicDataPreparer < handle
         end
 
         function resultSeismicData = Prepare(obj)
-            resultSeismicData = [];
-            symmetricalSeismicData = MakeSymmetricalSeismogramsFromInputSeismicData(obj, obj.initialSeismicData);
-            symmetricalSeismicData.CalculateFirstTimes(obj.spanForFirstTimes, obj.minTraceAmpForFirstTimes);
-
-
+            resultSeismicData = MakeSymmetricalSeismogramsFromInputSeismicData(obj, obj.initialSeismicData);
+            resultSeismicData.CalculateFirstTimes(obj.spanForFirstTimes, obj.minTraceAmpForFirstTimes);
         end
     end
 
@@ -60,7 +54,7 @@ classdef SeismicDataPreparer < handle
                 newSeismorgam = MakeSymmetricalSeismogram(obj, inputSeismicData.Seismograms(indexOfSource));
 %                 numbFigure = 1;
 %                 DataVisualizer.SetNumberOfFigure(numbFigure);
-%                 DataVisualizer.SetTitle(num2str(iSource));                
+%                 DataVisualizer.SetTitle(num2str(indexOfSource));
 %                 DataVisualizer.SetLabelX('Трасса');
 %                 DataVisualizer.SetLabelY('мс');
 %                 DataVisualizer.Clear();

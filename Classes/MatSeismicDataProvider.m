@@ -17,11 +17,14 @@ classdef MatSeismicDataProvider < ISeismicDataProvider
     end
 
     methods (Access = public)
-        function seismicData = GetSeismicData(obj)
-            seismicData = [];
+        function preparedSeismicData = GetSeismicData(obj)
+            fileName = GetFileNameOfPrepareSeismicData(obj);
             if obj.isCalculatingPreparedInputSeismicData == true
                 initialInputSeismicData = ReadSeismicData(obj);
-                preparedInputSeismicData = PrepareSeismicData(obj, initialInputSeismicData);
+                preparedSeismicData = PrepareSeismicData(obj, initialInputSeismicData);
+                save(fileName, 'preparedSeismicData');
+            else
+                load(fileName, 'preparedSeismicData');
             end
         end
     end
@@ -31,12 +34,19 @@ classdef MatSeismicDataProvider < ISeismicDataProvider
             obj.seismicDataFileReader = SeismicDataFileReader(obj.fullInputFileName);
             initialInputSeismicData = obj.seismicDataFileReader.Read();
         end
+
         function preparedInputSeismicData = PrepareSeismicData(obj, initialInputSeismicData)
             obj.seismicDataPreparer = SeismicDataPreparer();
             obj.seismicDataPreparer.InitialSeismicData = initialInputSeismicData;
             obj.seismicDataPreparer.SpanForFirstTimes
             obj.seismicDataPreparer.MinTraceAmpForFirstTimes
             preparedInputSeismicData = obj.seismicDataPreparer.Prepare();
+        end
+
+        function fileName = GetFileNameOfPrepareSeismicData(obj)
+            applicationConfig = ApplicationConfig.Instance();
+            fileName = [applicationConfig.FullOutputFolderName 'PrepareSeismicData_' ...
+                        applicationConfig.FileNameSuffix '.mat'];
         end
     end
 end

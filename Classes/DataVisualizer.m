@@ -100,9 +100,6 @@ classdef DataVisualizer < IVisualizer
             plot(samples / (2*amplitude) + indexOfTrace, -x, tipLineAndColor, 'LineWidth', lineWidth);
         end
 
-    end
-
-    methods(Static)
         function obj = Instance()
             persistent uniqueInstance
             if isempty(uniqueInstance)
@@ -127,7 +124,6 @@ classdef DataVisualizer < IVisualizer
             if ~isempty(obj.labelYName)
                 ylabel(obj.labelYName);
             end
-        end
-        
+        end        
     end
 end

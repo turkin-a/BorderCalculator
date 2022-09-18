@@ -2,6 +2,7 @@ classdef SeismicDataTest < matlab.unittest.TestCase
     properties (Access = private)
         testSeismicDataBuilder TestSeismicDataBuilder = TestSeismicDataBuilder()
     end
+
     methods(Test)
         function ChangeSamplesInOneObjectTest(testCase)
             % Arrange
@@ -65,9 +66,11 @@ classdef SeismicDataTest < matlab.unittest.TestCase
         function seismicData = ModifySamplesInSeismicData(testCase, seismicData)
             seismicData.Seismograms(1,1).Traces(1,1).Samples(1) = seismicData.Seismograms(1,1).Traces(1,1).Samples(1) + 1;
         end
+
         function seismicData = ModifySourceXInSeismicData(testCase, seismicData)
             seismicData.Seismograms(1,1).SensorsX = seismicData.Seismograms(1,1).SensorsX + 1;
         end
+
         function seismicData = ModifySensorsXInSeismicData(testCase, seismicData)
             seismicData.Seismograms(1,1).SensorsX(1) = seismicData.Seismograms(1,1).SensorsX(1) + 1;
         end

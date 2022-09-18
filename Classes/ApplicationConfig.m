@@ -21,18 +21,23 @@ classdef ApplicationConfig < ISingleton
         function fullInputFileName = get.FullInputFileName(obj)
             fullInputFileName = obj.fullInputFileName;
         end
+
         function fullOutputFolderName = get.FullOutputFolderName(obj)
             fullOutputFolderName = obj.fullOutputFolderName;
         end
+
         function fileNameSuffix = get.FileNameSuffix(obj)
             fileNameSuffix =  obj.fileNameSuffix;
         end
+
         function modelParametersFileName = get.ModelParametersFileName(obj)
             modelParametersFileName =  obj.modelParametersFileName;
         end
+
         function seismicDataProviderType = get.SeismicDataProviderType(obj)
             seismicDataProviderType =  obj.seismicDataProviderType;
         end
+
         function isCalculatingPreparedInputSeismicData = get.IsCalculatingPreparedInputSeismicData(obj)
             isCalculatingPreparedInputSeismicData =  obj.isCalculatingPreparedInputSeismicData;
         end

@@ -26,15 +26,19 @@ classdef XMLApplicationConfigData
         function documentVersionOfConfig = GetDocumentVersion(obj)
             documentVersionOfConfig = obj.documentVersion;
         end
+
         function obj = SetDocumentVersion(obj, documentVersion)
             obj.documentVersion = documentVersion;
         end
+
         function fullInputFileName = GetFullInputFileName(obj)
             fullInputFileName = [obj.BeginInputFileName obj.InputFileName];
         end
+
         function fullOutputFolderName = GetFullOutputFolderName(obj)
             fullOutputFolderName = [obj.BeginOutputFolderName obj.OutputFolderName];
         end
+
         function minDocumentVersion = GetMinDocumentVersion(obj)
             minDocumentVersion = obj.minDocumentVersion;
         end

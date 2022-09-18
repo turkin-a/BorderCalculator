@@ -20,9 +20,11 @@ classdef XMLModelParametersData
         function documentVersion = GetDocumentVersionOfConfig(obj)
             documentVersion = obj.documentVersion;
         end
+
         function obj = SetDocumentVersion(obj, documentVersion)
             obj.documentVersion = documentVersion;
         end
+
         function minDocumentVersion = GetMinDocumentVersion(obj)
             minDocumentVersion = obj.minDocumentVersion;
         end

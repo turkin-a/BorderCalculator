@@ -19,6 +19,7 @@ classdef XMLReader < handle
             docRootNode = doc.getDocumentElement();
             xmlData = ReadFieldNames(obj, docRootNode, xmlData);
         end
+
         function xmlData = ReadModelParameters(obj)
             parser = matlab.io.xml.dom.Parser();
             doc = parseFile(parser, obj.xmlFullFileName);
@@ -40,6 +41,7 @@ classdef XMLReader < handle
                 xmlData.(fieldName) = fieldValue;
             end
         end
+
         function documentVersion = ReadDocumentVersion(obj, docRootNode, xmlData)
             documentVersion = docRootNode.getAttribute('version');
             if IsDocumentVersionGood(obj, documentVersion, xmlData) == false
@@ -50,6 +52,7 @@ classdef XMLReader < handle
                 throw(ME);
             end
         end
+
         function result = IsDocumentVersionGood(obj, documentVersion, xmlData)
             result = true;
             if documentVersion < str2double(xmlData.GetMinDocumentVersion)
