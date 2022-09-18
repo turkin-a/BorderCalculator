@@ -16,7 +16,7 @@ classdef SeismicDataProviderFactory < handle
                 seismicDataProvider = MatSeismicDataProvider(applicationConfig.FullInputFileName, ...
                                                              applicationConfig.IsCalculatingPreparedInputSeismicData);
             else
-                errID = 'SeismicDataProviderFactory:WrongTypeOfSeismicDataProvider';
+                errID = 'SeismicDataProviderFactory:Create:WrongTypeOfSeismicDataProvider';
                 msgtext = 'Wrong value of TypeOfSeismicDataProvider';
                 baseException = MException(errID,msgtext);
                 throw(baseException);

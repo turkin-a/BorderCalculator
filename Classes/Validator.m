@@ -1,10 +1,10 @@
 classdef Validator
     methods(Access = public, Static)
-        function MustBeTypeOf(value, typeClass)
+        function MustBeTypeOf(value, classType)
             if ~isempty(value)
-                if isa(value, typeClass) == false
-                    msgID = 'SeismicDataFileReader:CouldNotReadFile';
-                    msgtext = ['Value must inherit class: ' typeClass];
+                if isa(value, classType) == false
+                    msgID = 'Validator:MustBeTypeOf:WrongClassTyp';
+                    msgtext = ['Value must inherit class: ' classType];
                     ME = MException(msgID,msgtext);
                     throw(ME);
                 end

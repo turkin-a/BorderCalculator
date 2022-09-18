@@ -1,52 +1,55 @@
 classdef XMLFileTest < matlab.unittest.TestCase
+    properties
+        xmlReadFileName  = 'DataForTests\DefaultSettings_XMLReaderTest.xml'
+        xmlWriteFileName = 'DataForTests\DefaultSettings_XMLWriterTest.xml'
+    end
     methods(Test)
         function XMLReaderTest(testCase)
+            % Arrange
             expXMLData = XMLFileTest.GetReaderExpampleXMLData();
-
-            xmlFileName = 'DataForTests\DefaultSettings_XMLReaderTest.xml';
-            xmlReader = XMLReader(xmlFileName);
+            % Act
+            xmlReader = XMLReader(testCase.xmlReadFileName);
             xmlReaderData = xmlReader.ReadApplicationConfig();
-
+            % Assert
             testCase.verifyEqual(xmlReaderData, expXMLData);
         end
         function ApplicationConfigReaderTest(testCase)
+            % Arrange
             expXMLData = XMLFileTest.GetReaderExpampleXMLData();
             expApplicationConfig = ApplicationConfigTest.GetNewInstance();
             expApplicationConfig.SetSettings(expXMLData);
-
-            xmlFileName = 'DataForTests\DefaultSettings_XMLReaderTest.xml';
-            xmlReader = XMLReader(xmlFileName);
+            % Act
+            xmlReader = XMLReader(testCase.xmlReadFileName);
             xmlReaderData = xmlReader.ReadApplicationConfig();
             readedApplicationConfig = ApplicationConfigTest.GetNewInstance();
             readedApplicationConfig.SetSettings(xmlReaderData);
-
+            % Assert
             testCase.verifyEqual(readedApplicationConfig, expApplicationConfig);
         end
         function XMLWriterTest(testCase)
+            % Arrange
             expXMLData = XMLFileTest.GetWriterExpampleXMLData();
-
-            xmlFileName = 'DataForTests\DefaultSettings_XMLWriterTest.xml';
-            xmlWriter = XMLWriter(xmlFileName);
+            xmlWriter = XMLWriter(testCase.xmlWriteFileName);
             xmlWriter.WriteApplicationConfig(expXMLData);
-
-            xmlReader = XMLReader(xmlFileName);
+            % Act
+            xmlReader = XMLReader(testCase.xmlWriteFileName);
             xmlWriterData = xmlReader.ReadApplicationConfig();
+            % Assert
             testCase.verifyEqual(xmlWriterData, expXMLData);
         end
         function ApplicationConfigWriterTest(testCase)
+            % Arrange
             expXMLData = XMLFileTest.GetWriterExpampleXMLData();
             expApplicationConfig = ApplicationConfigTest.GetNewInstance();
             expApplicationConfig.SetSettings(expXMLData);
-
-            xmlFileName = 'DataForTests\DefaultSettings_XMLWriterTest.xml';
-            xmlWriter = XMLWriter(xmlFileName);
+            xmlWriter = XMLWriter(testCase.xmlWriteFileName);
             xmlWriter.WriteApplicationConfig(expXMLData);
-
-            xmlReader = XMLReader(xmlFileName);
+            % Act
+            xmlReader = XMLReader(testCase.xmlWriteFileName);
             xmlWriterData = xmlReader.ReadApplicationConfig();
             readedApplicationConfig = ApplicationConfigTest.GetNewInstance();
             readedApplicationConfig.SetSettings(xmlWriterData);
-
+            % Assert
             testCase.verifyEqual(readedApplicationConfig, expApplicationConfig);
         end
     end

@@ -11,7 +11,7 @@ classdef SeismicDataFileReader < IFileReader
         function outputSeismicData = Read(obj)
             loadResult = load(obj.fileName);
             if isempty(loadResult)
-                msgID = 'SeismicDataFileReader:CouldNotReadFile';
+                msgID = 'SeismicDataFileReader:Read:CouldNotReadFile';
                 msgtext = ['Unable to read file ' strrep(obj.fileName, '\', '\\') '. SeismicDataFileReader:FileOpenError.'];
                 ME = MException(msgID,msgtext);
                 throw(ME);

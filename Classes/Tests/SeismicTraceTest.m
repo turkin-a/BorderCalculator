@@ -1,32 +1,29 @@
 classdef SeismicTraceTest < matlab.unittest.TestCase
     properties
-        numberSamplesPerTrace = 10;
+        testSeismicDataBuilder TestSeismicDataBuilder = TestSeismicDataBuilder()
     end
     methods(Test)
         function ChangeOneObjectTest(testCase)
-            seismicTrace1 = GetSeismicTrace(testCase);
+            % Arrange
+            seismicTrace1 = testCase.testSeismicDataBuilder.GetSeismicTrace();
             seismicTrace2 = seismicTrace1;
-
+            % Act
             seismicTrace1 = ModifySamplesInSeismicTrace(testCase, seismicTrace1);
-
+            % Assert
             testCase.verifyEqual(seismicTrace1, seismicTrace2);
         end
         function ChangeCopyOfObjectsTest(testCase)
-            seismicTrace1 = GetSeismicTrace(testCase);
+            % Arrange
+            seismicTrace1 = testCase.testSeismicDataBuilder.GetSeismicTrace();
             seismicTrace2 = copy(seismicTrace1);
-
+            % Act
             seismicTrace1 = ModifySamplesInSeismicTrace(testCase, seismicTrace1);
-
+            % Assert
             testCase.verifyNotEqual(seismicTrace1, seismicTrace2);
         end
     end
 
     methods(Access = private)
-        function seismicTrace = GetSeismicTrace(testCase)
-            seismicTrace = SeismicTrace();
-            samples = 1:1:testCase.numberSamplesPerTrace;
-            seismicTrace.Samples = samples;
-        end
         function seismicTrace = ModifySamplesInSeismicTrace(testCase, seismicTrace)
             seismicTrace.Samples(1) = seismicTrace.Samples(1) + 1;
         end
