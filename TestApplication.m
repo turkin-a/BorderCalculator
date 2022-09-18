@@ -11,6 +11,7 @@ classdef TestApplication < handle
             RunSeismicTraceTest(obj);
             RunSeismogramTest(obj);
             RunSeismicDataTest(obj);
+            RunSeismicDataFileReaderTest(obj);
         end
     end
 
@@ -34,6 +35,11 @@ classdef TestApplication < handle
             seismicDataTest = SeismicDataTest();
             resultSeismicDataTest = run(seismicDataTest);
             table(resultSeismicDataTest)
+        end
+        function RunSeismicDataFileReaderTest(obj)
+            seismicDataFileReaderTest = SeismicDataFileReaderTest();
+            resultSeismicDataFileReaderTest = run(seismicDataFileReaderTest);
+            table(resultSeismicDataFileReaderTest)
         end
 
         function obj = AddPaths(obj)
