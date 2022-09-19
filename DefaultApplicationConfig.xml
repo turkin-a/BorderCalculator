@@ -7,5 +7,6 @@
   <FileNameSuffix>tmp1</FileNameSuffix>
   <ModelParametersFileName>DefaultModelParameters.xml</ModelParametersFileName>
   <SeismicDataProviderTypeName>MatSeismicDataProviderType</SeismicDataProviderTypeName>
-  <IsCalculatingPreparedInputSeismicData>1</IsCalculatingPreparedInputSeismicData>
+  <IsCalculatingPreparedInputSeismicData>0</IsCalculatingPreparedInputSeismicData>
+  <IsCalculatingDirectWave>1</IsCalculatingDirectWave>
 </DefaultSettings.xml>

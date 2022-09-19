@@ -16,6 +16,7 @@ classdef XMLApplicationConfigData
         ModelParametersFileName (1,:) char = []
         SeismicDataProviderTypeName (1,:) char = []
         IsCalculatingPreparedInputSeismicData (1,:) char = []
+        IsCalculatingDirectWave (1,:) char = []
     end
 
     methods (Access = public)

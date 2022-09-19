@@ -6,6 +6,7 @@ classdef ApplicationConfig < ISingleton
         modelParametersFileName (1,:) char = []
         seismicDataProviderType (1,1) SeismicDataProviderTypes
         isCalculatingPreparedInputSeismicData (1,1) double = 1
+        isCalculatingDirectWave (1,1) double = 1
     end
 
     properties (Dependent, SetAccess = private)
@@ -15,6 +16,7 @@ classdef ApplicationConfig < ISingleton
         ModelParametersFileName
         SeismicDataProviderType
         IsCalculatingPreparedInputSeismicData
+        IsCalculatingDirectWave
     end
 
     methods
@@ -41,6 +43,10 @@ classdef ApplicationConfig < ISingleton
         function isCalculatingPreparedInputSeismicData = get.IsCalculatingPreparedInputSeismicData(obj)
             isCalculatingPreparedInputSeismicData =  obj.isCalculatingPreparedInputSeismicData;
         end
+
+        function isCalculatingDirectWave = get.IsCalculatingDirectWave(obj)
+            isCalculatingDirectWave =  obj.isCalculatingDirectWave;
+        end
     end
 
     methods(Access = protected)
@@ -55,7 +61,9 @@ classdef ApplicationConfig < ISingleton
             obj.fileNameSuffix = xmlData.FileNameSuffix;
             obj.modelParametersFileName = xmlData.ModelParametersFileName;
             obj.seismicDataProviderType = SeismicDataProviderTypes.GetTypeByName(xmlData.SeismicDataProviderTypeName);
+
             obj.isCalculatingPreparedInputSeismicData = str2double(xmlData.IsCalculatingPreparedInputSeismicData);
+            obj.isCalculatingDirectWave = str2double(xmlData.IsCalculatingDirectWave);
         end
     end
 

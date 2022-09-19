@@ -80,6 +80,15 @@ classdef Seismogram < ISeismogram & matlab.mixin.Copyable
             rigthDistance = obj.numberOfSensors - indexOfSeismogramCenter;
             maxDistance = min([leftDistance rigthDistance]);
         end
+
+        % Расстояние между соседними датчиками
+        function distanceBetweenSensors = GetDistanceBetwenTwoSensors(obj)
+            Li = zeros(1, length(obj.sensorsX)-1);
+            for i = 1:1:length(obj.sensorsX)-1
+                Li(i) = abs(obj.sensorsX(i+1) - obj.sensorsX(i));
+            end
+            distanceBetweenSensors = median(Li);
+        end
     end
 
 

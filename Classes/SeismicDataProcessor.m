@@ -1,6 +1,7 @@
 classdef SeismicDataProcessor < ISeismicDataProcessor
     properties (Access = private)
         seismicDataProvider ISeismicDataProvider
+        directWaveCalculator IDirectWaveCalculator
     end
     properties (Access = public, Dependent)
     end
@@ -17,7 +18,8 @@ classdef SeismicDataProcessor < ISeismicDataProcessor
     methods (Access = public)
         function obj = Calculate(obj)
             seismicData = obj.seismicDataProvider.GetSeismicData();
-            
+            obj.directWaveCalculator = DirectWaveCalculator(seismicData);
+            directWave = obj.directWaveCalculator.GetDirectWave();
         end
     end
 

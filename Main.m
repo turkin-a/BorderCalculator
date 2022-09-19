@@ -1,4 +1,5 @@
-clearvars
+clear all
+% clearvars
 clc
 warning off
 import javax.xml.xpath.*

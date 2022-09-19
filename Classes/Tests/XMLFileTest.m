@@ -67,6 +67,7 @@ classdef XMLFileTest < matlab.unittest.TestCase
             expXMLData.ModelParametersFileName = 'DefaultModelParameters.xml';
             expXMLData.SeismicDataProviderTypeName = 'MatSeismicDataProviderType';
             expXMLData.IsCalculatingPreparedInputSeismicData = '1';
+            expXMLData.IsCalculatingDirectWave = '1';
         end
 
         function expXMLData = GetWriterExpampleXMLData()
@@ -79,6 +80,7 @@ classdef XMLFileTest < matlab.unittest.TestCase
             expXMLData.ModelParametersFileName = 'DefaultModelParameters.xml';
             expXMLData.SeismicDataProviderTypeName = 'MatSeismicDataProviderType';
             expXMLData.IsCalculatingPreparedInputSeismicData = '1';
+            expXMLData.IsCalculatingDirectWave = '1';
         end
     end
 end
