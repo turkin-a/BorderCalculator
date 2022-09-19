@@ -17,6 +17,7 @@ classdef SeismicDataProcessor < ISeismicDataProcessor
     methods (Access = public)
         function obj = Calculate(obj)
             seismicData = obj.seismicDataProvider.GetSeismicData();
+            
         end
     end
 
