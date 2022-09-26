@@ -16,6 +16,7 @@ classdef Seismogram < ISeismogram & matlab.mixin.Copyable
         NumberOfSensors
         NumberOfSamplesPerTrace
         FirstTimes
+        IndexOfCentralSensor
     end
 
     methods
@@ -52,6 +53,12 @@ classdef Seismogram < ISeismogram & matlab.mixin.Copyable
 
         function firstTimes = get.FirstTimes(obj)
             firstTimes = obj.firstTimes;
+        end
+
+        function indexOfCentralSensor = get.IndexOfCentralSensor(obj)
+            sensorOffsetFromSource = abs(obj.sensorsX - obj.sourceX);
+            index = find(sensorOffsetFromSource == min(sensorOffsetFromSource));
+            indexOfCentralSensor = index(1);
         end
 
         % Рассчитать первые вступления
