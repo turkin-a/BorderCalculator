@@ -36,11 +36,11 @@ classdef DirectWaveCalculator < IDirectWaveCalculator
 %             DataVisualizer.SetLabelY('мс');
 %             DataVisualizer.Clear();
 %             DataVisualizer.PlotSeismogram(seismogram, 'g-', 1);
-%             plot(1:length(firstTimes), -firstTimes, 'r*');           
-            
+%             plot(1:length(firstTimes), -firstTimes, 'r*');
+
             firstTimes = CorrectionTimesOfBadSideFromGoodSide(obj, firstTimes, seismogram);
 %             plot(1:length(firstTimes), -firstTimes, 'b+');
-            
+
             leftIndices = GetLeftIndicesOfSensors(obj, seismogram);
             leftSideVelocity  = CalculationVelocityForOneSide(obj, seismogram, firstTimes, leftIndices);
             rightIndices = GetRightIndicesOfSensors(obj, seismogram);
@@ -48,7 +48,7 @@ classdef DirectWaveCalculator < IDirectWaveCalculator
             v12 = (leftSideVelocity + rightSideVelocity) / 2;
             velocity = v12 * 1000;
         end
-        
+
         function leftIndices = GetLeftIndicesOfSensors(obj, seismogram)
             indexOfCenter = seismogram.GetIndexOfSeismogramCenter;
             numberOfPoint = GetNumberOfPointForVelocityCalculation(obj, seismogram);
