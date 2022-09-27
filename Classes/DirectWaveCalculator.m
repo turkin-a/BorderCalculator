@@ -44,8 +44,8 @@ classdef DirectWaveCalculator < IDirectWaveCalculator
             leftSideVelocity  = CalculationVelocityForOneSide(obj, seismogram, firstTimes, leftIndices);
             rightIndices = GetRightIndicesOfSensors(obj, seismogram);
             rightSideVelocity = CalculationVelocityForOneSide(obj, seismogram, firstTimes, rightIndices);
-            v12 = (leftSideVelocity + rightSideVelocity) / 2;
-            velocity = v12 * 1000;
+            leftRightVelocity = (leftSideVelocity + rightSideVelocity) / 2;
+            velocity = leftRightVelocity * 1000;
         end
 
         function leftIndices = GetLeftIndicesOfSensors(obj, seismogram)
