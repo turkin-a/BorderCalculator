@@ -7,7 +7,6 @@ classdef DirectWaveCalculator < IDirectWaveCalculator
         timeDiapasonForRemoveOutburst (1,1) double = 100
     end
 
-
     methods
         function obj = DirectWaveCalculator(seismicData)
             obj.seismicData = seismicData;

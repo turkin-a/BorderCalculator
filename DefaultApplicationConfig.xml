@@ -8,5 +8,5 @@
   <ModelParametersFileName>DefaultModelParameters.xml</ModelParametersFileName>
   <SeismicDataProviderTypeName>MatSeismicDataProviderType</SeismicDataProviderTypeName>
   <IsCalculatingPreparedInputSeismicData>0</IsCalculatingPreparedInputSeismicData>
-  <IsCalculatingDirectWave>1</IsCalculatingDirectWave>
+  <IsCalculatingDirectWave>0</IsCalculatingDirectWave>
 </DefaultSettings.xml>
