@@ -7,7 +7,7 @@ classdef SeismicDataFileReaderTest < matlab.unittest.TestCase
     methods(Test)
         function ReadSeismicDataFromMatFileTest(testCase)
             % Arrange
-            expSeismicData = testCase.testSeismicDataBuilder.GetSeismicData();
+            expSeismicData = testCase.testSeismicDataBuilder.GetSeismicDataWithAxis();
             PrepareSeismicDataInMatFile(testCase);
             % Act
             seismicDataFileReader = SeismicDataFileReader(testCase.xmlReadFileName);

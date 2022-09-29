@@ -1,12 +1,13 @@
 classdef SeismogramTest < matlab.unittest.TestCase
     properties
         testSeismicDataBuilder TestSeismicDataBuilder = TestSeismicDataBuilder()
+        minTraceAmplitude = 0.03;
     end
 
     methods(Test)
         function ChangeSamplesInOneObjectTest(testCase)
             % Arrange
-            seismogram1 = testCase.testSeismicDataBuilder.GetSeismogram();
+            seismogram1 = testCase.testSeismicDataBuilder.GetSeismogramWithAxis();
             seismogram2 = seismogram1;
             % Act
             seismogram1 = ModifySamplesInSeismogram(testCase, seismogram1);
@@ -15,7 +16,7 @@ classdef SeismogramTest < matlab.unittest.TestCase
         end
         function ChangeSamplesInCopyObjectTest(testCase)
             % Arrange
-            seismogram1 = testCase.testSeismicDataBuilder.GetSeismogram();
+            seismogram1 = testCase.testSeismicDataBuilder.GetSeismogramWithAxis();
             seismogram2 = copy(seismogram1);
             % Act
             seismogram1 = ModifySamplesInSeismogram(testCase, seismogram1);
@@ -25,7 +26,7 @@ classdef SeismogramTest < matlab.unittest.TestCase
 
         function ChangeSourceXInOneObjectTest(testCase)
             % Arrange
-            seismogram1 = testCase.testSeismicDataBuilder.GetSeismogram();
+            seismogram1 = testCase.testSeismicDataBuilder.GetSeismogramWithAxis();
             seismogram2 = seismogram1;
             % Act
             seismogram1 = ModifySourceXInSeismogram(testCase, seismogram1);
@@ -34,7 +35,7 @@ classdef SeismogramTest < matlab.unittest.TestCase
         end
         function ChangeSourceXInCopyObjectTest(testCase)
             % Arrange
-            seismogram1 = testCase.testSeismicDataBuilder.GetSeismogram();
+            seismogram1 = testCase.testSeismicDataBuilder.GetSeismogramWithAxis();
             seismogram2 = copy(seismogram1);
             % Act
             seismogram1 = ModifySourceXInSeismogram(testCase, seismogram1);
@@ -44,7 +45,7 @@ classdef SeismogramTest < matlab.unittest.TestCase
 
         function ChangeSensorsXInOneObjectTest(testCase)
             % Arrange
-            seismogram1 = testCase.testSeismicDataBuilder.GetSeismogram();
+            seismogram1 = testCase.testSeismicDataBuilder.GetSeismogramWithAxis();
             seismogram2 = seismogram1;
             % Act
             seismogram1 = ModifySensorsXInSeismogram(testCase, seismogram1);
@@ -53,12 +54,36 @@ classdef SeismogramTest < matlab.unittest.TestCase
         end
         function ChangeSensorsXInCopyObjectTest(testCase)
             % Arrange
-            seismogram1 = testCase.testSeismicDataBuilder.GetSeismogram();
+            seismogram1 = testCase.testSeismicDataBuilder.GetSeismogramWithAxis();
             seismogram2 = copy(seismogram1);
             % Act
             seismogram1 = ModifySensorsXInSeismogram(testCase, seismogram1);
             % Assert
             testCase.verifyNotEqual(seismogram1, seismogram2);
+        end
+
+        function CalculateFirstTimesWithOneAmpMax_Span1Test(testCase)
+            % Arrange
+            directWaveTimes1 = testCase.testSeismicDataBuilder.GetDirectWaveTimes();
+            seismogram1 = testCase.testSeismicDataBuilder.GetSeismogramWithAxis();
+            span = 1;
+            
+            % Act
+            seismogram1.CalculateFirstTimes(span, testCase.minTraceAmplitude);
+            firstTimes = seismogram1.FirstTimes;
+            % Assert
+            testCase.verifyEqual(directWaveTimes1, firstTimes);
+        end
+        function CalculateFirstTimesWithOneAmpMax_Span5Test(testCase)
+            % Arrange
+            directWaveTimes1 = testCase.testSeismicDataBuilder.GetDirectWaveTimes();
+            seismogram1 = testCase.testSeismicDataBuilder.GetSeismogramWithAxis();
+            span = 5;
+            % Act
+            seismogram1.CalculateFirstTimes(span, testCase.minTraceAmplitude);
+            firstTimes = seismogram1.FirstTimes;
+            % Assert
+            testCase.verifyEqual(directWaveTimes1, firstTimes);
         end
     end
 

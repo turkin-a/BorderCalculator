@@ -63,21 +63,16 @@ classdef Seismogram < ISeismogram & matlab.mixin.Copyable
 
         % Рассчитать первые вступления
         function obj = CalculateFirstTimes(obj, span, minTraceAmplitude)
-            indexOfSeismogramCenter = GetIndexOfSeismogramCenter(obj);
+            indexOfSeismogramCenter = obj.IndexOfCentralSensor;
             newFirstTimes = zeros(1, obj.NumberOfSensors);
+
             for indexOfTrace = 1:1:obj.NumberOfSensors
                 trace = obj.Traces(indexOfTrace);
-                newFirstTimes(indexOfTrace) = trace.CalculateFirstTime(span, minTraceAmplitude);
+                newFirstTimes(indexOfTrace) = trace.CalculateAndGetFirstTime(span, minTraceAmplitude);
             end
+            newFirstTimes(indexOfSeismogramCenter) = 0;
             obj.firstTimes = SmoothFirstTimes(obj, newFirstTimes, indexOfSeismogramCenter);
             obj.isFirstTimesCalculated = true;
-        end
-
-        % Найти номер датчика с наименьшим удалением от источника
-        function indexOfSeismogramCenter = GetIndexOfSeismogramCenter(obj)
-            Li = abs(obj.sensorsX - obj.sourceX);
-            indexOfSeismogramCenter = find(min(Li) == Li);
-            indexOfSeismogramCenter = indexOfSeismogramCenter(1);
         end
 
         % Массив максимальных разрешенных растояний от источника до дальнего датчика
@@ -95,6 +90,18 @@ classdef Seismogram < ISeismogram & matlab.mixin.Copyable
                 Li(i) = abs(obj.sensorsX(i+1) - obj.sensorsX(i));
             end
             distanceBetweenSensors = median(Li);
+        end
+
+        function [setOfMaxTimes, setOfMinTimes] = GetSetsOfTimesOfMaxAndMinAmplitudes(obj)
+            setOfMaxTimes = cell(obj.NumberOfSensors, 1);
+            setOfMinTimes = cell(obj.NumberOfSensors, 1);
+            for indexOfSensor = 1:1:obj.NumberOfSensors
+                firstTime = round(obj.firstTimes(indexOfSensor));
+                trace = obj.seismicTraces(indexOfSensor);
+                [maxTimes, minTimes] = trace.GetTimesOfMaxAndMinAmplitudes(firstTime);
+                setOfMaxTimes{indexOfSensor} = maxTimes;
+                setOfMinTimes{indexOfSensor} = minTimes;
+            end
         end
     end
 

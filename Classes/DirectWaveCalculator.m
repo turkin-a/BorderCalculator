@@ -29,16 +29,7 @@ classdef DirectWaveCalculator < IDirectWaveCalculator
 
         function velocity = GetDirectWaveVelocityForSeismogram(obj, seismogram)
             firstTimes = seismogram.FirstTimes;
-%             numbFigure = 2;
-%             DataVisualizer.SetNumberOfFigure(numbFigure);
-%             DataVisualizer.SetLabelX('Трасса');
-%             DataVisualizer.SetLabelY('мс');
-%             DataVisualizer.Clear();
-%             DataVisualizer.PlotSeismogram(seismogram, 'g-', 1);
-%             plot(1:length(firstTimes), -firstTimes, 'r*');
-
             firstTimes = CorrectionTimesOfBadSideFromGoodSide(obj, firstTimes, seismogram);
-%             plot(1:length(firstTimes), -firstTimes, 'b+');
 
             leftIndices = GetLeftIndicesOfSensors(obj, seismogram);
             leftSideVelocity  = CalculationVelocityForOneSide(obj, seismogram, firstTimes, leftIndices);
@@ -49,14 +40,22 @@ classdef DirectWaveCalculator < IDirectWaveCalculator
         end
 
         function leftIndices = GetLeftIndicesOfSensors(obj, seismogram)
-            indexOfCenter = seismogram.GetIndexOfSeismogramCenter;
-            numberOfPoint = GetNumberOfPointForVelocityCalculation(obj, seismogram);
-            leftIndices = indexOfCenter-numberOfPoint:indexOfCenter-1;
+            indexOfCenter = seismogram.IndexOfCentralSensor;
+            numberOfPointForVelocityCalculation = GetNumberOfPointForVelocityCalculation(obj, seismogram);
+            leftIndex = indexOfCenter-numberOfPointForVelocityCalculation;
+            if leftIndex < 0
+                leftIndex = 1;
+            end
+            leftIndices = leftIndex:indexOfCenter-1;
         end
         function rightIndices = GetRightIndicesOfSensors(obj, seismogram)
-            indexOfCenter = seismogram.GetIndexOfSeismogramCenter;
-            numberOfPoint = GetNumberOfPointForVelocityCalculation(obj, seismogram);
-            rightIndices = indexOfCenter+1:indexOfCenter+numberOfPoint;
+            indexOfCenter = seismogram.IndexOfCentralSensor;
+            numberOfPointForVelocityCalculation = GetNumberOfPointForVelocityCalculation(obj, seismogram);
+            rightIndex = indexOfCenter+numberOfPointForVelocityCalculation;
+            if rightIndex > seismogram.NumberOfSensors
+                rightIndex = seismogram.NumberOfSensors;
+            end
+            rightIndices = indexOfCenter+1:rightIndex;
         end
 
         function numberOfPoint = GetNumberOfPointForVelocityCalculation(obj, seismogram)
@@ -77,7 +76,7 @@ classdef DirectWaveCalculator < IDirectWaveCalculator
         function firstTimes = CorrectionTimesOfBadSideFromGoodSide(obj, firstTimes, seismogram)
             indexOfGoodSide = GetIndexOfGoodSide(obj, seismogram);
             indicesOfSensors = GetIndicesOfGoodSide(obj, seismogram, indexOfGoodSide);
-            indexOfCenter = seismogram.GetIndexOfSeismogramCenter;
+            indexOfCenter = seismogram.IndexOfCentralSensor;
             for indexOfGoodSideSensor = indicesOfSensors
                 indexOfBadSideSensor = indexOfCenter + abs(indexOfCenter-indexOfGoodSideSensor);
                 timeOfGoodSideSensor = firstTimes(indexOfGoodSideSensor);

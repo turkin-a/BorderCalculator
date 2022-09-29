@@ -22,7 +22,7 @@ classdef AnalyticalSignalCalculator < handle
             obj.analyticalSignal.CorrectedSeismicData = CalculateCorrectedSeismicData(obj);
             obj.analyticalSignal.HilbertSeismicData = CalculateHilbertSeismicData(obj, obj.seismicData);
             obj.analyticalSignal.CorrectedAbsHilbertSeismicData = CalculateCorrectedAbsHilbertSeismicData(obj, obj.analyticalSignal.HilbertSeismicData);
-            obj.analyticalSignal.FiFunctionSeismicData = CalculateFiFunctionSeismicData(obj, obj.analyticalSignal.HilbertSeismicData);
+            obj.analyticalSignal.MomentaryPhaseFuncSeismicData  = CalculateMomentaryPhaseFuncSeismicData(obj, obj.analyticalSignal.HilbertSeismicData);
         end
 
         function analyticalSignal = get.AnalyticalSignalResult(obj)
@@ -109,36 +109,36 @@ classdef AnalyticalSignalCalculator < handle
             end
         end
 
-        % FiFunctionFromHilbert
-        function fiFunctionSeismicData = CalculateFiFunctionSeismicData(obj, hilbertSeismicData)
-            fiFunctionSeismicData = copy(hilbertSeismicData);
-            ConvertToFiFunctionSeismicData(obj, fiFunctionSeismicData);
+        % MomentaryPhaseFuncFromHilbert
+        function momentaryPhaseFuncSeismicData = CalculateMomentaryPhaseFuncSeismicData(obj, hilbertSeismicData)
+            momentaryPhaseFuncSeismicData = copy(hilbertSeismicData);
+            ConvertToMomentaryPhaseFuncSeismicData(obj, momentaryPhaseFuncSeismicData);
         end
-        function ConvertToFiFunctionSeismicData(obj, hilbertSeismicData)
+        function ConvertToMomentaryPhaseFuncSeismicData(obj, hilbertSeismicData)
             for i = 1:1:hilbertSeismicData.NumberOfSeismograms
                 hilbertSeismogram = hilbertSeismicData.Seismograms(i);
-                ConvertToFiFunctionSeismogram(obj, hilbertSeismogram);
+                ConvertToMomentaryPhaseFuncSeismogram(obj, hilbertSeismogram);
             end
         end
-        function ConvertToFiFunctionSeismogram(obj, hilbertSeismogram)
+        function ConvertToMomentaryPhaseFuncSeismogram(obj, hilbertSeismogram)
             for i = 1:1:hilbertSeismogram.NumberOfSensors
                 hilbertTrace = hilbertSeismogram.Traces(i);
-                ConvertToFiFunctionTrace(obj, hilbertTrace);
+                ConvertToMomentaryPhaseFuncTrace(obj, hilbertTrace);
             end
         end
-        function ConvertToFiFunctionTrace(obj, hilbertTrace)
+        function ConvertToMomentaryPhaseFuncTrace(obj, hilbertTrace)
             hilbertSamples = hilbertTrace.Samples;
-            fiFunction = GetFiFunctionFromHilbertSamples(obj, hilbertSamples);
+            fiFunction = GetMomentaryPhaseFuncFromHilbertSamples(obj, hilbertSamples);
             hilbertTrace.Samples = fiFunction;
         end
-        function fiFunction = GetFiFunctionFromHilbertSamples(obj, hilbertSamples)
+        function momentaryPhaseFunc = GetMomentaryPhaseFuncFromHilbertSamples(obj, hilbertSamples)
             realHilbertSamples = real(hilbertSamples);
             imagHilbertSamples = imag(hilbertSamples);
-            fiFunction = zeros(length(realHilbertSamples),1);
+            momentaryPhaseFunc = zeros(length(realHilbertSamples),1);
             for ti = 1:1:length(realHilbertSamples)
-                fiFunction(ti) = acos( realHilbertSamples(ti) / sqrt(realHilbertSamples(ti)^2 + imagHilbertSamples(ti)^2) );
+                momentaryPhaseFunc(ti) = acos( realHilbertSamples(ti) / sqrt(realHilbertSamples(ti)^2 + imagHilbertSamples(ti)^2) );
             end
-            fiFunction = -(fiFunction / max(abs(fiFunction)) - 0.5);
+            momentaryPhaseFunc = -(momentaryPhaseFunc / max(abs(momentaryPhaseFunc)) - 0.5);
         end
     end
 end

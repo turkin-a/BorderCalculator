@@ -2,8 +2,11 @@
 classdef MatSeismicDataProvider < ISeismicDataProvider
     properties (Access = private)
         isCalculatingPreparedInputSeismicData
+        isPreparingSeismicDataComplet = false
+
         seismicDataFileReader SeismicDataFileReader
         seismicDataPreparer SeismicDataPreparer
+        preparedSeismicData SeismicData
         fullInputFileName (1,:) char = []
     end
     properties (Access = public, Dependent)
@@ -18,18 +21,39 @@ classdef MatSeismicDataProvider < ISeismicDataProvider
 
     methods (Access = public)
         function preparedSeismicData = GetSeismicData(obj)
-            fileName = GetFileNameOfPrepareSeismicData(obj);
-            if obj.isCalculatingPreparedInputSeismicData == true
+            if IsCalculatingPreparedInputSeismicData(obj) == true
                 initialInputSeismicData = ReadSeismicData(obj);
                 preparedSeismicData = PrepareSeismicData(obj, initialInputSeismicData);
-                save(fileName, 'preparedSeismicData');
+                SavePreparingSeismicData(obj, preparedSeismicData);
             else
-                load(fileName, 'preparedSeismicData');
+                preparedSeismicData = LoadPreparingSeismicDataIfNeed(obj);
             end
         end
     end
 
     methods (Access = private)
+        function result = IsCalculatingPreparedInputSeismicData(obj)
+            result = false;
+            if obj.isCalculatingPreparedInputSeismicData == true && obj.isPreparingSeismicDataComplet == false
+                result = true;
+            end
+        end
+
+        function SavePreparingSeismicData(obj, preparedSeismicData)
+            fileName = GetFileNameOfPrepareSeismicData(obj);
+            save(fileName, 'preparedSeismicData');
+            obj.preparedSeismicData = preparedSeismicData;
+            obj.isPreparingSeismicDataComplet = true;
+        end
+        function preparedSeismicData = LoadPreparingSeismicDataIfNeed(obj)
+            if obj.isPreparingSeismicDataComplet == true
+                preparedSeismicData = obj.preparedSeismicData;
+            else
+                fileName = GetFileNameOfPrepareSeismicData(obj);
+                load(fileName, 'preparedSeismicData');
+            end
+        end
+
         function initialInputSeismicData = ReadSeismicData(obj)
             obj.seismicDataFileReader = SeismicDataFileReader(obj.fullInputFileName);
             initialInputSeismicData = obj.seismicDataFileReader.Read();

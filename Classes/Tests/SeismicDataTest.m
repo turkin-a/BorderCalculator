@@ -6,7 +6,7 @@ classdef SeismicDataTest < matlab.unittest.TestCase
     methods(Test)
         function ChangeSamplesInOneObjectTest(testCase)
             % Arrange
-            seismicData1 = testCase.testSeismicDataBuilder.GetSeismicData();
+            seismicData1 = testCase.testSeismicDataBuilder.GetSeismicDataWithAxis();
             seismicData2 = seismicData1;
             % Act
             seismicData1 = ModifySamplesInSeismicData(testCase, seismicData1);
@@ -15,7 +15,7 @@ classdef SeismicDataTest < matlab.unittest.TestCase
         end
         function ChangeSamplesInCopyObjectTest(testCase)
             % Arrange
-            seismicData1 = testCase.testSeismicDataBuilder.GetSeismicData();
+            seismicData1 = testCase.testSeismicDataBuilder.GetSeismicDataWithAxis();
             seismicData2 = copy(seismicData1);
             % Act
             seismicData1 = ModifySamplesInSeismicData(testCase, seismicData1);
@@ -25,7 +25,7 @@ classdef SeismicDataTest < matlab.unittest.TestCase
 
         function ChangeSourceXInOneObjectTest(testCase)
             % Arrange
-            seismicData1 = testCase.testSeismicDataBuilder.GetSeismicData();
+            seismicData1 = testCase.testSeismicDataBuilder.GetSeismicDataWithAxis();
             seismicData2 = seismicData1;
             % Act
             seismicData1 = ModifySourceXInSeismicData(testCase, seismicData1);
@@ -34,7 +34,7 @@ classdef SeismicDataTest < matlab.unittest.TestCase
         end
         function ChangeSourceXInCopyObjectTest(testCase)
             % Arrange
-            seismicData1 = testCase.testSeismicDataBuilder.GetSeismicData();
+            seismicData1 = testCase.testSeismicDataBuilder.GetSeismicDataWithAxis();
             seismicData2 = copy(seismicData1);
             % Act
             seismicData1 = ModifySourceXInSeismicData(testCase, seismicData1);
@@ -44,7 +44,7 @@ classdef SeismicDataTest < matlab.unittest.TestCase
 
         function ChangeSensorsXInOneObjectTest(testCase)
             % Arrange
-            seismicData1 = testCase.testSeismicDataBuilder.GetSeismicData();
+            seismicData1 = testCase.testSeismicDataBuilder.GetSeismicDataWithAxis();
             seismicData2 = seismicData1;
             % Act
             seismicData1 = ModifySensorsXInSeismicData(testCase, seismicData1);
@@ -53,7 +53,7 @@ classdef SeismicDataTest < matlab.unittest.TestCase
         end
         function ChangeSensorsXInCopyObjectTest(testCase)
             % Arrange
-            seismicData1 = testCase.testSeismicDataBuilder.GetSeismicData();
+            seismicData1 = testCase.testSeismicDataBuilder.GetSeismicDataWithAxis();
             seismicData2 = copy(seismicData1);
             % Act
             seismicData1 = ModifySensorsXInSeismicData(testCase, seismicData1);

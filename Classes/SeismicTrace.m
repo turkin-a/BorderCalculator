@@ -24,7 +24,7 @@ classdef SeismicTrace < handle & matlab.mixin.Copyable
         end
 
         % Найти первое вступление на трассе
-        function firstTimeForTrace = CalculateFirstTime(obj, span, minTraceAmplitudePercent)
+        function firstTimeForTrace = CalculateAndGetFirstTime(obj, span, minTraceAmplitudePercent)
             firstTimeForTrace = 0;
             curSamples = smooth(obj.samples, span);
             minTraceAmplitude = GetMinTraceAmplitude(obj, minTraceAmplitudePercent);
@@ -33,28 +33,60 @@ classdef SeismicTrace < handle & matlab.mixin.Copyable
                     firstTimeForTrace = time;
                     break;
                 end
-
-                if abs(AmplitudeForTime1) > abs(AmplitudeForTime0) && abs(AmplitudeForTime1) == abs(AmplitudeForTime2) && abs(AmplitudeForTime1) > minTraceAmplitude
+                if IsThisSeveralAmpForFirstImpulse(obj, curSamples, time, minTraceAmplitude) == true
                     trA = (curSamples(time:end));
+                    AmplitudeForTime1 = curSamples(time);
                     ind0 = find(trA ~= AmplitudeForTime1);
                     if ~isempty(ind0)
                         ind1 = ind0(1);
                         if abs(AmplitudeForTime1) > abs(trA(ind1))
-                            firstImpulseTime = round(time+(ind1)/2-1);
+                            firstTimeForTrace = round(time+(ind1)/2-1);
                             break;
                         end
                     end
                 end
 
             end
-%             firstTimeForTrace = firstImpulseTime;
+        end
+
+        function [maxTimes, minTimes] = GetTimesOfMaxAndMinAmplitudes(obj, firstTime)
+            maxTimes = [];
+            minTimes = firstTime;
+            begTime = max([firstTime 3]);
+            endTime = length(obj.samples)-2;
+            for index = begTime:1:endTime
+                if IsSampleLocalMaximumWithIndex(obj, index)
+                    maxTimes(end+1,1) = index;
+                end
+                if IsSampleLocalMinimumWithIndex(obj, index)
+                    minTimes(end+1,1) = index;
+                end
+            end
+            minTimes(end+1,1) = length(obj.samples);
         end
     end
 
     methods (Access = private)
+        function result = IsSampleLocalMaximumWithIndex(obj, index)
+            result = false;
+            if (obj.samples(index) > obj.samples(index-1)  && obj.samples(index) > obj.samples(index+1)) || ...
+               (obj.samples(index) >= obj.samples(index-1) && obj.samples(index) > obj.samples(index-2)  && ...
+                obj.samples(index) >= obj.samples(index+1) && obj.samples(index) > obj.samples(index+2))
+                result = true;
+            end
+        end
+        function result = IsSampleLocalMinimumWithIndex(obj, index)
+            result = false;
+            if (obj.samples(index) < obj.samples(index-1)  && obj.samples(index) < obj.samples(index+1)) || ...
+               (obj.samples(index) <= obj.samples(index-1) && obj.samples(index) < obj.samples(index-2)  && ...
+                obj.samples(index) <= obj.samples(index+1) && obj.samples(index) < obj.samples(index+2))
+                result = true;
+            end
+        end
+
         function minTraceAmplitude = GetMinTraceAmplitude(obj, minTraceAmplitudePercent)
-            if minTraceAmplitudePercent < max(abs(tr)) * minTraceAmplitudePercent
-                minTraceAmplitude = max(abs(tr)) * minTraceAmplitudePercent;
+            if minTraceAmplitudePercent < max(abs(obj.samples)) * minTraceAmplitudePercent
+                minTraceAmplitude = max(abs(obj.samples)) * minTraceAmplitudePercent;
             else
                 minTraceAmplitude = minTraceAmplitudePercent;
             end
@@ -66,6 +98,17 @@ classdef SeismicTrace < handle & matlab.mixin.Copyable
             AmplitudeForTime2 = curSamples(time+1);
             if abs(AmplitudeForTime1) > abs(AmplitudeForTime0) && ... 
                abs(AmplitudeForTime1) > abs(AmplitudeForTime2) && ...
+               abs(AmplitudeForTime1) > minTraceAmplitude
+                result = true;
+            end
+        end
+        function result = IsThisSeveralAmpForFirstImpulse(obj, curSamples, time, minTraceAmplitude)
+            result = false;
+            AmplitudeForTime0 = curSamples(time-1);
+            AmplitudeForTime1 = curSamples(time);
+            AmplitudeForTime2 = curSamples(time+1);
+            if abs(AmplitudeForTime1) >  abs(AmplitudeForTime0) && ...
+               abs(AmplitudeForTime1) == abs(AmplitudeForTime2) && ...
                abs(AmplitudeForTime1) > minTraceAmplitude
                 result = true;
             end

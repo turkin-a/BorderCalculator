@@ -12,6 +12,7 @@ classdef TestApplication < handle
             RunSeismogramTest(obj);
             RunSeismicDataTest(obj);
             RunSeismicDataFileReaderTest(obj);
+            RunDirectWaveCalculatorTest(obj);
         end
     end
 
@@ -27,23 +28,25 @@ classdef TestApplication < handle
             resultSeismicTraceTest = run(seismicTraceTest);
             table(resultSeismicTraceTest)
         end
-
         function RunSeismogramTest(obj)
             seismogramTest = SeismogramTest();
             resultSeismogramTest = run(seismogramTest);
             table(resultSeismogramTest)
         end
-
         function RunSeismicDataTest(obj)
             seismicDataTest = SeismicDataTest();
             resultSeismicDataTest = run(seismicDataTest);
             table(resultSeismicDataTest)
         end
-
         function RunSeismicDataFileReaderTest(obj)
             seismicDataFileReaderTest = SeismicDataFileReaderTest();
             resultSeismicDataFileReaderTest = run(seismicDataFileReaderTest);
             table(resultSeismicDataFileReaderTest)
+        end
+        function RunDirectWaveCalculatorTest(obj)
+            directWaveCalculatorTest = DirectWaveCalculatorTest();
+            resultDirectWaveCalculatorTest = run(directWaveCalculatorTest);
+            table(resultDirectWaveCalculatorTest)
         end
 
         function obj = AddPaths(obj)
