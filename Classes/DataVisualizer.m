@@ -35,8 +35,6 @@ classdef DataVisualizer < IVisualizer
                 result = true;
             end
         end
-
-        
     end
 
     methods (Access = public, Static)

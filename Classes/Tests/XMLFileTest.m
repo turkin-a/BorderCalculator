@@ -1,5 +1,5 @@
 classdef XMLFileTest < matlab.unittest.TestCase
-    properties
+    properties (Access = private)
         xmlReadFileName  = 'DataForTests\DefaultSettings_XMLReaderTest.xml'
         xmlWriteFileName = 'DataForTests\DefaultSettings_XMLWriterTest.xml'
     end

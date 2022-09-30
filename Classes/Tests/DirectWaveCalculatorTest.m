@@ -1,5 +1,5 @@
 classdef DirectWaveCalculatorTest < matlab.unittest.TestCase
-    properties
+    properties (Access = private)
         testSeismicDataBuilder TestSeismicDataBuilder = TestSeismicDataBuilder()
         numberOfSeismograms = 1
         numberOfSensors = 31

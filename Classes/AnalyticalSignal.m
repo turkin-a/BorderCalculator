@@ -3,14 +3,14 @@ classdef AnalyticalSignal < handle
         correctedSeismicData
         hilbertSeismicData
         correctedAbsHilbertSeismicData
-        momentaryPhaseFuncSeismicData
+        momentaryPhaseSeismicData
     end
 
     properties (Dependent)
         CorrectedSeismicData
         HilbertSeismicData
         CorrectedAbsHilbertSeismicData
-        MomentaryPhaseFuncSeismicData
+        MomentaryPhaseSeismicData
     end
 
     methods
@@ -35,11 +35,11 @@ classdef AnalyticalSignal < handle
             obj.correctedAbsHilbertSeismicData = correctedAbsHilbertSeismicData;
         end
 
-        function momentaryPhaseFuncSeismicData = get.MomentaryPhaseFuncSeismicData(obj)
-            momentaryPhaseFuncSeismicData = obj.momentaryPhaseFuncSeismicData;
+        function momentaryPhaseSeismicData = get.MomentaryPhaseSeismicData(obj)
+            momentaryPhaseSeismicData = obj.momentaryPhaseSeismicData;
         end
-        function set.MomentaryPhaseFuncSeismicData(obj, momentaryPhaseFuncSeismicData)
-            obj.momentaryPhaseFuncSeismicData = momentaryPhaseFuncSeismicData;
+        function set.MomentaryPhaseSeismicData(obj, momentaryPhaseSeismicData)
+            obj.momentaryPhaseSeismicData = momentaryPhaseSeismicData;
         end
     end
 

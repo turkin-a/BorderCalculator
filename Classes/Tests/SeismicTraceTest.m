@@ -1,5 +1,5 @@
 classdef SeismicTraceTest < matlab.unittest.TestCase
-    properties
+    properties (Access = private)
         testSeismicDataBuilder TestSeismicDataBuilder = TestSeismicDataBuilder()
         timeOfMax = 150
         timesOfMax = [151; 301]

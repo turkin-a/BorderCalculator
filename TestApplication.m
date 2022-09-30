@@ -2,9 +2,7 @@ classdef TestApplication < handle
     methods
         function obj = TestApplication()
         end
-    end
 
-    methods (Access = public)
         function obj = Run(obj)
             AddPaths(obj);
             RunXMLFileTest(obj);

@@ -3,21 +3,25 @@ classdef Interval < handle
         beginTime (1,1) double
         endingTime (1,1) double
         typeOfInterval (1,1) IntervalType
-        frequency = 0
-
+        indexOfTrace (1,1) double
+        frequency (1,1) double = 0
+        dt
+    end
+    properties (Access = private, Constant)
         diapasonForTypeCalculation = 250;
         coefficientForGoodInterval = 1.5+0.15;
         coefficientForAdditionInterval = 1.50;
         delta = 0.618;
         gamma = 3.5
         span = 11;
-        dt
     end
 
     properties (Dependent)
         BeginTime
         EndingTime
         TypeOfInterval
+        IndexOfTrace
+        Frequency
     end
 
     methods (Static)
@@ -39,9 +43,10 @@ classdef Interval < handle
     end
 
     methods
-        function obj = Interval(beginTime, endingTime, dt)
+        function obj = Interval(beginTime, endingTime, indexOfTrace, dt)
             obj.beginTime = beginTime;
             obj.endingTime = endingTime;
+            obj.indexOfTrace = indexOfTrace;
             obj.dt = dt;
         end
 
@@ -55,6 +60,14 @@ classdef Interval < handle
 
         function typeOfInterval = get.TypeOfInterval(obj)
             typeOfInterval = obj.typeOfInterval;
+        end
+
+        function indexOfTrace = get.IndexOfTrace(obj)
+            indexOfTrace = obj.indexOfTrace;
+        end
+
+        function frequency = get.Frequency(obj)
+            frequency = obj.frequency;
         end
 
         function CalculateType(obj, trace, traceOfHilbert)

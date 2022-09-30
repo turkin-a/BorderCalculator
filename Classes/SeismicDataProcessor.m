@@ -1,21 +1,18 @@
 classdef SeismicDataProcessor < ISeismicDataProcessor
     properties (Access = private)
-%         seismicDataProvider ISeismicDataProvider
         directWaveCalculator IDirectWaveCalculator
         seismicData SeismicData
         directWaveVelocities (:,1) double
-        bedinIndexOfSeism double = 27
-        endIndexOfSeism double = 28
-%         correctedSeismicData SeismicData
-%         hilbertSeismicData SeismicData
         analyticalSignal AnalyticalSignal
         seismogramProcessor SeismogramProcessor
 
-%         % tmp
-        surfaceVelocity = 300
+        % tmp
         isCalculatingAnalyticalSignal = 0
     end
-    properties (Access = public, Dependent)
+    properties (Access = private, Constant)
+        bedinIndexOfSeism double = 27
+        endIndexOfSeism double = 28
+        surfaceVelocity = 300
     end
 
     methods
@@ -41,6 +38,9 @@ classdef SeismicDataProcessor < ISeismicDataProcessor
         function CalculateAdditionalData(obj)
             CalculateDirectWaveVelocity(obj);
             CalculateAnalyticalSignal(obj);
+
+            % TestVi
+            TesterVisualizer.SetData(obj.seismicData, obj.analyticalSignal, obj.directWaveVelocities);
         end
 
         % Рассчет скорости прямой волны
@@ -72,10 +72,13 @@ classdef SeismicDataProcessor < ISeismicDataProcessor
         end
         
         function CalculateAxes(obj)
-            for indexOfSeism = obj.bedinIndexOfSeism:1:obj.endIndexOfSeism
-                obj.seismogramProcessor.Seismogram = obj.seismicData.Seismograms(indexOfSeism);
-                obj.seismogramProcessor.DirectWaveVelocity = obj.directWaveVelocities(indexOfSeism);
-                obj.seismogramProcessor.SetParameters(obj.analyticalSignal, indexOfSeism);
+            for indexOfSeismogram = obj.bedinIndexOfSeism:1:obj.endIndexOfSeism
+                % TestVi
+                TesterVisualizer.PlotStage(indexOfSeismogram);
+
+                obj.seismogramProcessor.Seismogram = obj.seismicData.Seismograms(indexOfSeismogram);
+                obj.seismogramProcessor.DirectWaveVelocity = obj.directWaveVelocities(indexOfSeismogram);
+                obj.seismogramProcessor.SetParameters(obj.analyticalSignal, indexOfSeismogram);
                 obj.seismogramProcessor.Calculate();
 
                 g = 1;

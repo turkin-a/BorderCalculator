@@ -8,8 +8,9 @@ classdef IntervalsCalculator < handle
 
         setOfMaxTimes
         setOfMinTimes
-        setOfIntervals
-
+        setOfIntervals (:,1) cell
+    end
+    properties (Access = private, Constant)
         gamma = 3.5
         minAmpRatioToCombine = 0.50;
     end
@@ -95,7 +96,7 @@ classdef IntervalsCalculator < handle
             firstTime = obj.seismogram.FirstTimes(indexOfTrace);
             maxTimes = GetValuesMoreThen(obj, obj.setOfMaxTimes{indexOfTrace}, firstTime);
             minTimes = GetValuesMoreThen(obj, obj.setOfMinTimes{indexOfTrace}, firstTime);
-            intervals = BuildIntervalsForTrace(obj, maxTimes, minTimes);
+            intervals = BuildIntervalsForTrace(obj, maxTimes, minTimes, indexOfTrace);
 
             samplesOfHilbert = obj.correctedAbsHilbertSeismogram.Traces(indexOfTrace).Samples;
             intervals = CombineIntervalsOfPulseEnvelope(obj, intervals, samplesOfHilbert);
@@ -108,7 +109,7 @@ classdef IntervalsCalculator < handle
                 resultValues = values(ind);
             end
         end
-        function intervals = BuildIntervalsForTrace(obj, maxTimes, minTimes)
+        function intervals = BuildIntervalsForTrace(obj, maxTimes, minTimes, indexOfTrace)
             intervals = [];
             count = 0;
             dt = 1 / obj.numberSamplesPerSec;
@@ -119,7 +120,7 @@ classdef IntervalsCalculator < handle
                     ind = find(maxTimes > min1 & maxTimes < min2, 1);
                     if ~isempty(ind)
                         count = count + 1;
-                        intervals{count,1} = Interval(min1, min2, dt);
+                        intervals{count,1} = Interval(min1, min2, indexOfTrace, dt);
                     end
                 end
             end
@@ -156,7 +157,10 @@ classdef IntervalsCalculator < handle
                 ampRatio2 = ampRatios(i+1,1);
                 if ampRatio1 > obj.minAmpRatioToCombine && ampRatio2 > obj.minAmpRatioToCombine
                     dt = 1 / obj.numberSamplesPerSec;
-                    newInterval = Interval(intervals{i}.BeginTime, intervals{i}.EndingTime, dt);
+                    newInterval = Interval(intervals{i}.BeginTime, ...
+                                           intervals{i}.EndingTime, ...
+                                           intervals{i}.IndexOfTrace, ...
+                                           dt);
                     intervals{i} = newInterval;
                     intervals(i+1) = [];
                     isComdined = true;

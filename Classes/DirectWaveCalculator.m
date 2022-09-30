@@ -2,6 +2,8 @@ classdef DirectWaveCalculator < IDirectWaveCalculator
     properties (Access = private)
         seismicData SeismicData
         velocities (:,1) double = []
+    end
+    properties (Access = private, Constant)
         maxDistanceForVelocityCalculation (1,1) double = 1000
         maxDiffTime (1,1) double = 10
         timeDiapasonForRemoveOutburst (1,1) double = 100

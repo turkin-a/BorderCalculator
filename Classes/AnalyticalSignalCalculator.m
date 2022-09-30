@@ -1,11 +1,12 @@
 classdef AnalyticalSignalCalculator < handle
     properties (Access = private)
         seismicData SeismicData
+        analyticalSignal AnalyticalSignal
+    end
+    properties (Access = private, Constant)
         spanForCorrectSeismicData = 5
         spanForSmoothHilbertSamples = 30
         numberOfSmoothIteration = 9
-        analyticalSignal AnalyticalSignal
-        
     end
 
     properties (Dependent)
@@ -22,14 +23,12 @@ classdef AnalyticalSignalCalculator < handle
             obj.analyticalSignal.CorrectedSeismicData = CalculateCorrectedSeismicData(obj);
             obj.analyticalSignal.HilbertSeismicData = CalculateHilbertSeismicData(obj, obj.seismicData);
             obj.analyticalSignal.CorrectedAbsHilbertSeismicData = CalculateCorrectedAbsHilbertSeismicData(obj, obj.analyticalSignal.HilbertSeismicData);
-            obj.analyticalSignal.MomentaryPhaseFuncSeismicData  = CalculateMomentaryPhaseFuncSeismicData(obj, obj.analyticalSignal.HilbertSeismicData);
+            obj.analyticalSignal.MomentaryPhaseSeismicData = CalculateMomentaryPhaseSeismicData(obj, obj.analyticalSignal.HilbertSeismicData);
         end
 
         function analyticalSignal = get.AnalyticalSignalResult(obj)
             analyticalSignal = obj.analyticalSignal;
         end
-
-
     end
 
     methods (Access = private)
@@ -76,8 +75,7 @@ classdef AnalyticalSignalCalculator < handle
         function ConvertToHilbertTrace(obj, trace)
             samples = trace.Samples;
             hilbertSamples = hilbert(samples);
-            absHilbertSamples = GetSmoothHilbertSamples(obj, hilbertSamples);
-            trace.Samples = absHilbertSamples;
+            trace.Samples = hilbertSamples;
         end
 
         % CorrectedAbsHilbertSeismicData
@@ -110,23 +108,23 @@ classdef AnalyticalSignalCalculator < handle
         end
 
         % MomentaryPhaseFuncFromHilbert
-        function momentaryPhaseFuncSeismicData = CalculateMomentaryPhaseFuncSeismicData(obj, hilbertSeismicData)
+        function momentaryPhaseFuncSeismicData = CalculateMomentaryPhaseSeismicData(obj, hilbertSeismicData)
             momentaryPhaseFuncSeismicData = copy(hilbertSeismicData);
-            ConvertToMomentaryPhaseFuncSeismicData(obj, momentaryPhaseFuncSeismicData);
+            ConvertToMomentaryPhaseSeismicData(obj, momentaryPhaseFuncSeismicData);
         end
-        function ConvertToMomentaryPhaseFuncSeismicData(obj, hilbertSeismicData)
+        function ConvertToMomentaryPhaseSeismicData(obj, hilbertSeismicData)
             for i = 1:1:hilbertSeismicData.NumberOfSeismograms
                 hilbertSeismogram = hilbertSeismicData.Seismograms(i);
-                ConvertToMomentaryPhaseFuncSeismogram(obj, hilbertSeismogram);
+                ConvertToMomentaryPhaseSeismogram(obj, hilbertSeismogram);
             end
         end
-        function ConvertToMomentaryPhaseFuncSeismogram(obj, hilbertSeismogram)
+        function ConvertToMomentaryPhaseSeismogram(obj, hilbertSeismogram)
             for i = 1:1:hilbertSeismogram.NumberOfSensors
                 hilbertTrace = hilbertSeismogram.Traces(i);
-                ConvertToMomentaryPhaseFuncTrace(obj, hilbertTrace);
+                ConvertToMomentaryPhaseTrace(obj, hilbertTrace);
             end
         end
-        function ConvertToMomentaryPhaseFuncTrace(obj, hilbertTrace)
+        function ConvertToMomentaryPhaseTrace(obj, hilbertTrace)
             hilbertSamples = hilbertTrace.Samples;
             fiFunction = GetMomentaryPhaseFuncFromHilbertSamples(obj, hilbertSamples);
             hilbertTrace.Samples = fiFunction;
@@ -138,7 +136,9 @@ classdef AnalyticalSignalCalculator < handle
             for ti = 1:1:length(realHilbertSamples)
                 momentaryPhaseFunc(ti) = acos( realHilbertSamples(ti) / sqrt(realHilbertSamples(ti)^2 + imagHilbertSamples(ti)^2) );
             end
-            momentaryPhaseFunc = -(momentaryPhaseFunc / max(abs(momentaryPhaseFunc)) - 0.5);
+            if max(abs(momentaryPhaseFunc)) > 0
+                momentaryPhaseFunc = -(momentaryPhaseFunc / max(abs(momentaryPhaseFunc)) - 0.5);
+            end
         end
     end
 end
