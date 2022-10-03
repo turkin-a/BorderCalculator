@@ -6,6 +6,7 @@ classdef Seismogram < ISeismogram & matlab.mixin.Copyable
         seismicTraces (:,1) SeismicTrace
         numberOfSensors (1,1) double = 0
         numberOfSamplesPerTrace (1,1) double = 0
+        numberSamplesPerSec (1,1) double = 0
         firstTimes (1,:) double = []
     end
 
@@ -15,6 +16,7 @@ classdef Seismogram < ISeismogram & matlab.mixin.Copyable
         Traces
         NumberOfSensors
         NumberOfSamplesPerTrace
+        NumberSamplesPerSec
         FirstTimes
         IndexOfCentralSensor
     end
@@ -51,6 +53,13 @@ classdef Seismogram < ISeismogram & matlab.mixin.Copyable
             numberOfSamplesPerTrace = obj.numberOfSamplesPerTrace;
         end
 
+        function set.NumberSamplesPerSec(obj, numberSamplesPerSec)
+            obj.numberSamplesPerSec = numberSamplesPerSec;
+        end
+        function numberSamplesPerSec = get.NumberSamplesPerSec(obj)
+            numberSamplesPerSec = obj.numberSamplesPerSec;
+        end
+
         function firstTimes = get.FirstTimes(obj)
             firstTimes = obj.firstTimes;
         end
@@ -59,6 +68,11 @@ classdef Seismogram < ISeismogram & matlab.mixin.Copyable
             sensorOffsetFromSource = abs(obj.sensorsX - obj.sourceX);
             index = find(sensorOffsetFromSource == min(sensorOffsetFromSource));
             indexOfCentralSensor = index(1);
+        end
+
+        function directWaveTimes = GetDirectTimesByVelocity(obj, surfaceVelocity)
+            Li = GetDistancesFromSource(obj);
+            directWaveTimes = Li / (surfaceVelocity/obj.numberSamplesPerSec);
         end
 
         % Рассчитать первые вступления
@@ -77,9 +91,8 @@ classdef Seismogram < ISeismogram & matlab.mixin.Copyable
 
         % Массив максимальных разрешенных растояний от источника до дальнего датчика
         function maxDistance = GetMaximumAllowableDistanceFromSource(obj)
-            indexOfSeismogramCenter = obj.GetIndexOfSeismogramCenter();
-            leftDistance = indexOfSeismogramCenter-1;
-            rigthDistance = obj.numberOfSensors - indexOfSeismogramCenter;
+            leftDistance = obj.IndexOfCentralSensor-1;
+            rigthDistance = obj.numberOfSensors - obj.IndexOfCentralSensor;
             maxDistance = min([leftDistance rigthDistance]);
         end
 
@@ -90,6 +103,10 @@ classdef Seismogram < ISeismogram & matlab.mixin.Copyable
                 Li(i) = abs(obj.sensorsX(i+1) - obj.sensorsX(i));
             end
             distanceBetweenSensors = median(Li);
+        end
+
+        function distancesFromSource = GetDistancesFromSource(obj)
+            distancesFromSource = abs(obj.SourceX - obj.SensorsX);
         end
 
         function [setOfMaxTimes, setOfMinTimes] = GetSetsOfTimesOfMaxAndMinAmplitudes(obj)
@@ -164,7 +181,7 @@ classdef Seismogram < ISeismogram & matlab.mixin.Copyable
     end
 
     methods (Static)
-        function seismogram = BuildSeismogram(seisData, sourceX, sensorsX)
+        function seismogram = BuildSeismogram(seisData, sourceX, sensorsX, discret)
             seismogram = Seismogram();
             numberOfSensors = length(sensorsX);
             traces(1:numberOfSensors,1) = SeismicTrace();
@@ -177,6 +194,7 @@ classdef Seismogram < ISeismogram & matlab.mixin.Copyable
             seismogram.SourceX = sourceX;
             seismogram.SensorsX = sensorsX;
             seismogram.Traces = traces;
+            seismogram.NumberSamplesPerSec = discret;
         end
     end
 end

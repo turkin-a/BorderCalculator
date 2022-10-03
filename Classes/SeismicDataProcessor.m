@@ -39,7 +39,7 @@ classdef SeismicDataProcessor < ISeismicDataProcessor
             CalculateDirectWaveVelocity(obj);
             CalculateAnalyticalSignal(obj);
 
-            % TestVi
+            % TesterVisualizer
             TesterVisualizer.SetData(obj.seismicData, obj.analyticalSignal, obj.directWaveVelocities);
         end
 
@@ -73,7 +73,7 @@ classdef SeismicDataProcessor < ISeismicDataProcessor
         
         function CalculateAxes(obj)
             for indexOfSeismogram = obj.bedinIndexOfSeism:1:obj.endIndexOfSeism
-                % TestVi
+                % TesterVisualizer
                 TesterVisualizer.PlotStage(indexOfSeismogram);
 
                 obj.seismogramProcessor.Seismogram = obj.seismicData.Seismograms(indexOfSeismogram);

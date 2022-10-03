@@ -13,9 +13,6 @@ classdef SeismicDataPreparer < handle
 
     methods
         function obj = SeismicDataPreparer()
-            modelParameters = ModelParameters.Instance();
-            obj.spanForFirstTimes = modelParameters.SpanForFirstTimes;
-            obj.minTraceAmpForFirstTimes = modelParameters.MinTraceAmpForFirstTimes;
         end
 
         function initialSeismicData = get.InitialSeismicData(obj)
@@ -65,7 +62,7 @@ classdef SeismicDataPreparer < handle
 
         % Создать симетричную сейсмограмму на основе текущей
         function newSeismorgam = MakeSymmetricalSeismogram(obj, initialSeismogram)
-            indexOfSeismogramCenter = initialSeismogram.GetIndexOfSeismogramCenter();
+            indexOfSeismogramCenter = initialSeismogram.IndexOfCentralSensor;
             maxDistance = initialSeismogram.GetMaximumAllowableDistanceFromSource();
             newNumberOfSensors = 2*maxDistance + 1;
             newTraces(1:newNumberOfSensors,1) = SeismicTrace();

@@ -38,7 +38,7 @@ classdef DirectWaveCalculator < IDirectWaveCalculator
             rightIndices = GetRightIndicesOfSensors(obj, seismogram);
             rightSideVelocity = CalculationVelocityForOneSide(obj, seismogram, firstTimes, rightIndices);
             leftRightVelocity = (leftSideVelocity + rightSideVelocity) / 2;
-            velocity = leftRightVelocity * 1000;
+            velocity = leftRightVelocity * seismogram.NumberSamplesPerSec;
         end
 
         function leftIndices = GetLeftIndicesOfSensors(obj, seismogram)
@@ -66,7 +66,7 @@ classdef DirectWaveCalculator < IDirectWaveCalculator
         end
 
         function curSTD = GetSTDForSensors(obj, indicesOfSensors, seismogram)
-            Li = abs(seismogram.SourceX - seismogram.SensorsX);
+            Li = seismogram.GetDistancesFromSource();
             firstTimes = seismogram.FirstTimes;
             xLi = Li(indicesOfSensors);
             times = firstTimes(indicesOfSensors);
@@ -120,7 +120,7 @@ classdef DirectWaveCalculator < IDirectWaveCalculator
         function velocity = CalculationVelocityForOneSide(obj, seismogram, firstTimes, indicesOfSensors)
             timesOfSensors = [];
             sensorsX = [];
-            Li = abs(seismogram.SourceX - seismogram.SensorsX);
+            Li = seismogram.GetDistancesFromSource();
             for i = indicesOfSensors
                 if firstTimes(i) > 0
                     sensorsX(end+1) = Li(i);

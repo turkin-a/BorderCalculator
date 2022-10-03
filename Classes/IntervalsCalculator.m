@@ -2,7 +2,7 @@ classdef IntervalsCalculator < handle
     properties (Access = private)
         seismogram ISeismogram
         correctedAbsHilbertSeismogram ISeismogram
-        numberSamplesPerSec double
+%         numberSamplesPerSec double
         directWaveVelocity double
         surfaceVelocity double
 
@@ -20,7 +20,7 @@ classdef IntervalsCalculator < handle
         CorrectedAbsHilbertSeismogram
         DirectWaveVelocity
         SurfaceVelocity
-        NumberSamplesPerSec
+%         NumberSamplesPerSec
         SetOfIntervals
     end
 
@@ -61,12 +61,12 @@ classdef IntervalsCalculator < handle
             surfaceVelocity = obj.surfaceVelocity;
         end
 
-        function set.NumberSamplesPerSec(obj, numberSamplesPerSec)
-            obj.numberSamplesPerSec = numberSamplesPerSec;
-        end
-        function numberSamplesPerSec = get.NumberSamplesPerSec(obj)
-            numberSamplesPerSec = obj.numberSamplesPerSec;
-        end
+%         function set.NumberSamplesPerSec(obj, numberSamplesPerSec)
+%             obj.numberSamplesPerSec = numberSamplesPerSec;
+%         end
+%         function numberSamplesPerSec = get.NumberSamplesPerSec(obj)
+%             numberSamplesPerSec = obj.numberSamplesPerSec;
+%         end
 
         function setOfIntervals = get.SetOfIntervals(obj)
             setOfIntervals = obj.setOfIntervals;
@@ -82,6 +82,8 @@ classdef IntervalsCalculator < handle
     methods (Access = private)
         function CalculateSetsOfMaxAndMinTimes(obj)
             [obj.setOfMaxTimes, obj.setOfMinTimes] = obj.correctedAbsHilbertSeismogram.GetSetsOfTimesOfMaxAndMinAmplitudes();
+
+            TesterVisualizer.SetMaxAndMinHilbertTimes(obj.setOfMaxTimes, obj.setOfMinTimes);
         end
 
         function BuildSetOfIntervals(obj)
@@ -92,18 +94,23 @@ classdef IntervalsCalculator < handle
             end
         end
 
-        function intervals = GetIntervalsForTrace(obj, indexOfTrace)
-            firstTime = obj.seismogram.FirstTimes(indexOfTrace);
-            maxTimes = GetValuesMoreThen(obj, obj.setOfMaxTimes{indexOfTrace}, firstTime);
-            minTimes = GetValuesMoreThen(obj, obj.setOfMinTimes{indexOfTrace}, firstTime);
-            intervals = BuildIntervalsForTrace(obj, maxTimes, minTimes, indexOfTrace);
-
-            samplesOfHilbert = obj.correctedAbsHilbertSeismogram.Traces(indexOfTrace).Samples;
-            intervals = CombineIntervalsOfPulseEnvelope(obj, intervals, samplesOfHilbert);
+        function intervals = GetIntervalsForTrace(obj, indexOfSensor)
+            if indexOfSensor == obj.seismogram.IndexOfCentralSensor
+                intervals = [];
+            else
+                firstTime = obj.seismogram.FirstTimes(indexOfSensor);
+                maxTimes = GetValuesMoreThen(obj, obj.setOfMaxTimes{indexOfSensor}, firstTime);
+                minTimes = GetValuesMoreThen(obj, obj.setOfMinTimes{indexOfSensor}, firstTime);
+                intervals = BuildIntervalsForTrace(obj, maxTimes, minTimes, indexOfSensor);
+    
+                samplesOfHilbert = obj.correctedAbsHilbertSeismogram.Traces(indexOfSensor).Samples;
+                intervals = CombineIntervalsOfPulseEnvelope(obj, intervals, samplesOfHilbert);
+            end
         end
 
         function resultValues = GetValuesMoreThen(obj, values, minNumber)
             resultValues = [];
+            minNumber = max([minNumber 1]);
             ind = find(values >= minNumber);
             if ~isempty(ind)
                 resultValues = values(ind);
@@ -112,7 +119,7 @@ classdef IntervalsCalculator < handle
         function intervals = BuildIntervalsForTrace(obj, maxTimes, minTimes, indexOfTrace)
             intervals = [];
             count = 0;
-            dt = 1 / obj.numberSamplesPerSec;
+            dt = 1 / obj.seismogram.NumberSamplesPerSec;
             for i = 1:1:length(minTimes)-1
                 min1 = minTimes(i);
                 min2 = minTimes(i+1);
@@ -143,7 +150,11 @@ classdef IntervalsCalculator < handle
                 interval = intervals{i};
                 time1 = interval.BeginTime;
                 time2 = interval.EndingTime;
+                try
                 ampRatios(i,1) = samplesOfHilbert(time1) / max(samplesOfHilbert(time1:time2));
+                catch
+                    h = 1;
+                end
                 ampRatios(i,2) = samplesOfHilbert(time2) / max(samplesOfHilbert(time1:time2));
             end
         end
@@ -152,17 +163,18 @@ classdef IntervalsCalculator < handle
             if size(ampRatios,1) < 2
                 return;
             end
-            for i = 1:1:size(ampRatios,1)-1
-                ampRatio1 = ampRatios(i,2);
-                ampRatio2 = ampRatios(i+1,1);
+            for index1 = 1:1:size(ampRatios,1)-1
+                index2 = index1 + 1;
+                ampRatio1 = ampRatios(index1,2);
+                ampRatio2 = ampRatios(index2,1);
                 if ampRatio1 > obj.minAmpRatioToCombine && ampRatio2 > obj.minAmpRatioToCombine
-                    dt = 1 / obj.numberSamplesPerSec;
-                    newInterval = Interval(intervals{i}.BeginTime, ...
-                                           intervals{i}.EndingTime, ...
-                                           intervals{i}.IndexOfTrace, ...
+                    dt = 1 / obj.seismogram.NumberSamplesPerSec;
+                    newInterval = Interval(intervals{index1}.BeginTime, ...
+                                           intervals{index2}.EndingTime, ...
+                                           intervals{index1}.IndexOfTrace, ...
                                            dt);
-                    intervals{i} = newInterval;
-                    intervals(i+1) = [];
+                    intervals{index1} = newInterval;
+                    intervals(index1+1) = [];
                     isComdined = true;
                     return;
                 end

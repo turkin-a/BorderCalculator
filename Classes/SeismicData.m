@@ -75,7 +75,7 @@ classdef SeismicData < handle & matlab.mixin.Copyable
                 curSeisData = seismicDataFromMatFile.Seis{i};
                 curSourceX = seismicDataFromMatFile.mDetonX(i);
                 curSensorsX = seismicDataFromMatFile.mXd{i};
-                seismogram = Seismogram.BuildSeismogram(curSeisData, curSourceX, curSensorsX);
+                seismogram = Seismogram.BuildSeismogram(curSeisData, curSourceX, curSensorsX, seismicDataFromMatFile.discret);
                 seismograms(i,1) = seismogram;
             end
             outputSeismicData.Seismograms = seismograms;

@@ -5,12 +5,14 @@ classdef TestApplication < handle
 
         function obj = Run(obj)
             AddPaths(obj);
+
             RunXMLFileTest(obj);
             RunSeismicTraceTest(obj);
             RunSeismogramTest(obj);
             RunSeismicDataTest(obj);
             RunSeismicDataFileReaderTest(obj);
             RunDirectWaveCalculatorTest(obj);
+            RunIntervalTest(obj);
         end
     end
 
@@ -46,22 +48,25 @@ classdef TestApplication < handle
             resultDirectWaveCalculatorTest = run(directWaveCalculatorTest);
             table(resultDirectWaveCalculatorTest)
         end
+        function RunIntervalTest(obj)
+            intervalTest = IntervalTest();
+            resultIntervalTest = run(intervalTest);
+            table(resultIntervalTest)
+        end
+
 
         function obj = AddPaths(obj)
             AddPathsOfClasses(obj);
         end
-
         function obj = AddPathsOfClasses(obj)
             folderOfClassesName = GetFolderOfClassesName(obj);
             pathsOfSubDirectories = genpath(folderOfClassesName);
             addpath(pathsOfSubDirectories);
         end
-
         function folderOfClassesName = GetFolderOfClassesName(obj)
             workPath = GetWorkPath(obj);
             folderOfClassesName = [workPath '\Classes'];
         end
-
         function workPath = GetWorkPath(obj)
             workPath = cd('.');
         end

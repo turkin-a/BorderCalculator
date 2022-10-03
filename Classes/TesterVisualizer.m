@@ -4,6 +4,12 @@ classdef TesterVisualizer < ISingleton
         directWaveVelocities (:,1) double
         analyticalSignal AnalyticalSignal
         momentaryPhaseSeismicData SeismicData
+
+        setOfIntervals cell
+        setOfMaxTimes cell
+        setOfMinTimes cell
+        setOfPoints1 cell
+        setOfPoints2 cell
         indexOfSeismogram
     end
 
@@ -20,7 +26,7 @@ classdef TesterVisualizer < ISingleton
         end
 
         function CorrectMomentaryPhaseSeismogram(obj, momentaryPhaseSeismogram, velocity)
-            Li = abs(momentaryPhaseSeismogram.SourceX - momentaryPhaseSeismogram.SensorsX);
+            Li = momentaryPhaseSeismogram.GetDistancesFromSource();
             directWaveTimes = round( Li*1000 / velocity);
             for indexOfSensor = 1:1:momentaryPhaseSeismogram.NumberOfSensors
                 momentaryPhaseTraces = momentaryPhaseSeismogram.Traces(indexOfSensor);
@@ -55,12 +61,52 @@ classdef TesterVisualizer < ISingleton
             obj.indexOfSeismogram = indexOfSeismogram;
             DataVisualizer.SetNumberOfFigure(1);
             DataVisualizer.Clear();
-            DataVisualizer.SetTitle(num2str(indexOfSeismogram));
+            DataVisualizer.SetTitle(num2str(obj.indexOfSeismogram));
 
-            DataVisualizer.PlotSeismogram(obj.seismicData.Seismograms(indexOfSeismogram), 'g-', 1);
-            DataVisualizer.PlotSeismogram(obj.analyticalSignal.CorrectedSeismicData.Seismograms(indexOfSeismogram), 'g--', 1);
+%             DataVisualizer.PlotSeismogram(obj.seismicData.Seismograms(indexOfSeismogram), 'g-', 1);
+            DataVisualizer.PlotSeismogram(obj.analyticalSignal.CorrectedSeismicData.Seismograms(indexOfSeismogram), 'g-', 1);
             DataVisualizer.PlotSeismogram(obj.analyticalSignal.CorrectedAbsHilbertSeismicData.Seismograms(indexOfSeismogram), 'b-', 1);
-            DataVisualizer.PlotSeismogram(obj.momentaryPhaseSeismicData.Seismograms(indexOfSeismogram), 'm-', 1);
+%             DataVisualizer.PlotSeismogram(obj.momentaryPhaseSeismicData.Seismograms(indexOfSeismogram), 'm-', 1);
+        end
+        function PlotTestedData()
+            obj = TesterVisualizer.Instance();
+            TesterVisualizer.PlotStage(obj.indexOfSeismogram);
+
+%             DataVisualizer.PlotSetOfTimes(obj.setOfMaxTimes, 'r+', 7);
+%             DataVisualizer.PlotSetOfTimes(obj.setOfMinTimes, 'b+', 7);
+
+            absHilbertSeismogram = obj.analyticalSignal.CorrectedAbsHilbertSeismicData.Seismograms(obj.indexOfSeismogram);
+            DataVisualizer.PlotSetOfIntervals(obj.setOfIntervals, 3, 8);
+            DataVisualizer.PlotHilbertInSetOfIntervals(obj.setOfIntervals, absHilbertSeismogram, 3, 8);
+
+            TesterVisualizer.PlotSetOfPoints();
+            
+        end
+
+        function PlotSetOfPoints()
+            obj = TesterVisualizer.Instance();
+            markerSize = 6;
+            lineWidth = 1;
+            DataVisualizer.PlotSetOfPoints(obj.setOfPoints1, markerSize, lineWidth);
+            DataVisualizer.PlotSetOfPoints(obj.setOfPoints2, markerSize, lineWidth);
+        end
+
+        function SetIntervals(setOfIntervals)
+            obj = TesterVisualizer.Instance();
+            obj.setOfIntervals = setOfIntervals;
+        end
+        function SetMaxAndMinHilbertTimes(setOfMaxTimes, setOfMinTimes)
+            obj = TesterVisualizer.Instance();
+            obj.setOfMaxTimes = setOfMaxTimes;
+            obj.setOfMinTimes = setOfMinTimes;
+        end
+        function SetPoints1(setOfPoints1)
+            obj = TesterVisualizer.Instance();
+            obj.setOfPoints1 = setOfPoints1;
+        end
+        function SetPoints2(setOfPoints2)
+            obj = TesterVisualizer.Instance();
+            obj.setOfPoints2 = setOfPoints2;
         end
 
 

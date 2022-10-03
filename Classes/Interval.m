@@ -1,15 +1,16 @@
-classdef Interval < handle
-    properties (Access = private)
+classdef Interval < handle %& matlab.mixin.Copyable
+    properties (Access = protected)
         beginTime (1,1) double
         endingTime (1,1) double
-        typeOfInterval (1,1) IntervalType
+        typeOfInterval (1,1) IntervalType = IntervalType.Bad
         indexOfTrace (1,1) double
         frequency (1,1) double = 0
         dt
     end
     properties (Access = private, Constant)
-        diapasonForTypeCalculation = 250;
-        coefficientForGoodInterval = 1.5+0.15;
+        diapasonForTypeCalculationIteration1 = 250;
+        diapasonForTypeCalculationIteration2 = 250*2;
+        coefficientForGoodInterval = 1.50 + 0.15;
         coefficientForAdditionInterval = 1.50;
         delta = 0.618;
         gamma = 3.5
@@ -76,35 +77,37 @@ classdef Interval < handle
         end
     end
 
-    methods (Access = private)
+    methods (Access = protected)
         function CalculateTypeByHilbert(obj, traceOfHilbert)
-            if IsIntervalChosen(obj, traceOfHilbert, obj.coefficientForGoodInterval)
+            if IsIntervalChosen(obj, traceOfHilbert, obj.coefficientForGoodInterval, obj.diapasonForTypeCalculationIteration1)
                 obj.typeOfInterval = IntervalType.Good;
-            elseif IsIntervalChosen(obj, traceOfHilbert, obj.coefficientForAdditionInterval)
+            elseif IsIntervalChosen(obj, traceOfHilbert, obj.coefficientForAdditionInterval, obj.diapasonForTypeCalculationIteration2)
                 obj.typeOfInterval= IntervalType.Additional;
             end
         end
-        function result = IsIntervalChosen(obj, traceOfHilbert, coefficient)
+        function result = IsIntervalChosen(obj, traceOfHilbert, coefficient, diapason)
             result = false;
             timesOfInterval = obj.beginTime:obj.endingTime;
-            samplesOfHilbertInInterval = traceOfHilbert.Samples(timesOfInterval);
+            samplesOfHilbert = traceOfHilbert.Samples;
+            samplesOfHilbertInInterval = samplesOfHilbert(timesOfInterval);
             indexOfMaxInInterval = find(samplesOfHilbertInInterval == max(samplesOfHilbertInInterval),1);
+            indexOfMax = indexOfMaxInInterval + (obj.beginTime-1);
             curAmp = samplesOfHilbertInInterval(indexOfMaxInInterval);
-            minAmplitude = GetMinAmplitudeOfHilbert(obj, samplesOfHilbertInInterval, indexOfMaxInInterval, coefficient);
+            minAmplitude = GetMinAmplitudeOfHilbert(obj, samplesOfHilbert, indexOfMax, coefficient, diapason);
             if curAmp >= minAmplitude
                 result = true;
             end
         end
-        function resultAmplitude = GetMinAmplitudeOfHilbert(obj, samplesOfHilbertInInterval, centerTime, coefficient)
-            begTime = centerTime - obj.diapasonForTypeCalculation;
-            endTime = centerTime + obj.diapasonForTypeCalculation;
+        function resultAmplitude = GetMinAmplitudeOfHilbert(obj, samplesOfHilbert, centerTime, coefficient, diapason)
+            begTime = centerTime - diapason;
+            endTime = centerTime + diapason;
             if begTime < 1
                 begTime = 1;
             end
-            if endTime > length(samplesOfHilbertInInterval)
-                endTime = length(samplesOfHilbertInInterval);
+            if endTime > length(samplesOfHilbert)
+                endTime = length(samplesOfHilbert);
             end
-            curSemplesOfHilbert = samplesOfHilbertInInterval(begTime:endTime);
+            curSemplesOfHilbert = samplesOfHilbert(begTime:endTime);
             curAbsSemplesOfHilbert = abs(curSemplesOfHilbert);
             medianAmp = median(curAbsSemplesOfHilbert);
             resultAmplitude = coefficient * medianAmp;

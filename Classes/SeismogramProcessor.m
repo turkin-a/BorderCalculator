@@ -13,10 +13,11 @@ classdef SeismogramProcessor < handle
 
         surfaceVelocity double
         setOfIntervals (:,1) cell
-        setOfPoints (:,1) cell
+        setOfPoints1 (:,1) cell
+        setOfPoints2 (:,1) cell
 
         isCalculateIntervals = 0
-        isCalculatePoints = 1
+        isCalculatePoints = 0
     end
     properties (Access = public, Dependent)
         Seismogram
@@ -68,7 +69,7 @@ classdef SeismogramProcessor < handle
                 obj.intervalsCalculator.Seismogram = obj.seismogram;
                 obj.intervalsCalculator.CorrectedAbsHilbertSeismogram = obj.correctedAbsHilbertSeismogram;
                 obj.intervalsCalculator.SurfaceVelocity = obj.surfaceVelocity;
-                obj.intervalsCalculator.NumberSamplesPerSec = obj.numberSamplesPerSec;
+%                 obj.intervalsCalculator.NumberSamplesPerSec = obj.numberSamplesPerSec;
                 obj.intervalsCalculator.DirectWaveVelocity = obj.directWaveVelocity;
                 obj.intervalsCalculator.Calculate();
                 setOfIntervalsResult = obj.intervalsCalculator.SetOfIntervals;
@@ -77,9 +78,13 @@ classdef SeismogramProcessor < handle
                 load(fileName, "setOfIntervalsResult");
             end
             obj.setOfIntervals = setOfIntervalsResult;
+            TesterVisualizer.SetIntervals(setOfIntervalsResult);
         end
 
         function CalculatePoints(obj)
+            % TesterVisualizer
+%             TesterVisualizer.PlotTestedData();
+
             applicationConfig = ApplicationConfig.Instance();
             fileName = [applicationConfig.FullOutputFolderName 'PointCalculatorResult_' applicationConfig.FileNameSuffix '.mat'];
             if obj.isCalculatePoints == true
@@ -87,14 +92,18 @@ classdef SeismogramProcessor < handle
                 obj.pointCalculator.SetOfIntervals = obj.setOfIntervals;
                 obj.pointCalculator.SurfaceVelocity = obj.surfaceVelocity;
                 obj.pointCalculator.DirectWaveVelocity = obj.directWaveVelocity;
-                obj.pointCalculator.NumberSamplesPerSec = obj.numberSamplesPerSec;
                 obj.pointCalculator.Calculate();
-                setOfPointsResult = obj.pointCalculator.SetOfPoints;
-                save(fileName, "setOfPointsResult");
+                setOfPointsResult1 = obj.pointCalculator.SetOfPoints1;
+                setOfPointsResult2 = obj.pointCalculator.SetOfPoints2;
+                save(fileName, "setOfPointsResult1", "setOfPointsResult2");
             else
-                load(fileName, "setOfPointsResult");
+                load(fileName, "setOfPointsResult1", "setOfPointsResult2");
             end
-            obj.setOfPoints = setOfPointsResult;
+            obj.setOfPoints1 = setOfPointsResult1;
+            obj.setOfPoints2 = setOfPointsResult2;
+            TesterVisualizer.SetPoints1(setOfPointsResult1);
+            TesterVisualizer.SetPoints2(setOfPointsResult2);
+            TesterVisualizer.PlotTestedData();
         end
 
 

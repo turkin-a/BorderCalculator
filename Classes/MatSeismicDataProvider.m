@@ -62,8 +62,9 @@ classdef MatSeismicDataProvider < ISeismicDataProvider
         function preparedInputSeismicData = PrepareSeismicData(obj, initialInputSeismicData)
             obj.seismicDataPreparer = SeismicDataPreparer();
             obj.seismicDataPreparer.InitialSeismicData = initialInputSeismicData;
-            obj.seismicDataPreparer.SpanForFirstTimes
-            obj.seismicDataPreparer.MinTraceAmpForFirstTimes
+            modelParameters = ModelParameters.Instance();
+            obj.seismicDataPreparer.SpanForFirstTimes = modelParameters.SpanForFirstTimes;
+            obj.seismicDataPreparer.MinTraceAmpForFirstTimes = modelParameters.MinTraceAmpForFirstTimes;
             preparedInputSeismicData = obj.seismicDataPreparer.Prepare();
         end
 
