@@ -3,6 +3,7 @@ classdef PointCalculator < handle
         setOfPoints1 cell
         setOfPoints2 cell
         momentaryPhaseSeismogram ISeismogram
+        absHilbertSeismogram ISeismogram
         setOfIntervals cell
         surfaceVelocity
         directWaveVelocity
@@ -13,16 +14,18 @@ classdef PointCalculator < handle
     properties (Access = private, Constant)
         direction1 =  1;
         direction2 = -1;
-        distanceForPointCalculation = 1800
+%         distanceForPointCalculation = 1800
         minAmpOfMomentaryPhase = 0.6;
         maxFrequency = 60;
-        offsetFromIntervalEdges = 0
+        offsetFromIntervalEdgesToRemovePoints = 4
+        minHilbertAmplitudeLvlInInterval = 0.382
     end
 
     properties (Dependent)
         SetOfPoints1
         SetOfPoints2
         MomentaryPhaseSeismogram
+        AbsHilbertSeismogram
         SetOfIntervals
         SurfaceVelocity
         DirectWaveVelocity
@@ -43,6 +46,13 @@ classdef PointCalculator < handle
         end
         function seismogram = get.MomentaryPhaseSeismogram(obj)
             seismogram = obj.momentaryPhaseSeismogram;
+        end
+
+        function set.AbsHilbertSeismogram(obj, seismogram)
+            obj.absHilbertSeismogram = seismogram;
+        end
+        function seismogram = get.AbsHilbertSeismogram(obj)
+            seismogram = obj.absHilbertSeismogram;
         end
 
         function set.SetOfIntervals(obj, setOfIntervals)
@@ -119,22 +129,10 @@ classdef PointCalculator < handle
 
 
         function indexOfBegSensor = GetIndexOfBegSensor(obj)
-            indexOfCentralSensor = obj.momentaryPhaseSeismogram.IndexOfCentralSensor;
-            distanceBetwenTwoSensors = obj.momentaryPhaseSeismogram.GetDistanceBetwenTwoSensors();
-            sensorsForPointCalculation = round(obj.distanceForPointCalculation / distanceBetwenTwoSensors);
-            indexOfBegSensor = indexOfCentralSensor - sensorsForPointCalculation;
-            if indexOfBegSensor < 1
-                indexOfBegSensor = 1;
-            end
+            indexOfBegSensor = ModelParameters.GetIndexOfBegSensor(obj.momentaryPhaseSeismogram);
         end
         function indexOfEndSensor = GetIndexOfEndSensor(obj)
-            indexOfCentralSensor = obj.momentaryPhaseSeismogram.IndexOfCentralSensor;
-            distanceBetwenTwoSensors = obj.momentaryPhaseSeismogram.GetDistanceBetwenTwoSensors();
-            sensorsForPointCalculation = round(obj.distanceForPointCalculation / distanceBetwenTwoSensors);
-            indexOfEndSensor = indexOfCentralSensor + sensorsForPointCalculation;
-            if indexOfEndSensor > obj.momentaryPhaseSeismogram.NumberOfSensors
-                indexOfEndSensor = obj.momentaryPhaseSeismogram.NumberOfSensors;
-            end
+            indexOfEndSensor = ModelParameters.GetIndexOfEndSensor(obj.momentaryPhaseSeismogram);
         end
 
         function [points1, points2] = CalculatePointsForIntervals(obj, intervals, momentaryPhaseSamples)
@@ -144,10 +142,18 @@ classdef PointCalculator < handle
             points2 = [];
             for i = 1:1:length(intervals)
                 interval = intervals{i};
-                newPoints1 = CalculatePointsForInterval(obj, interval, momentaryPhaseSamples, momentaryPhaseTimes, obj.direction1);
-                newPoints2 = CalculatePointsForInterval(obj, interval, momentaryPhaseSamples, momentaryPhaseTimes, obj.direction2);
-                points1 = [points1; newPoints1];
-                points2 = [points2; newPoints2];
+                if IsSearchingPointsInInterval(obj, interval) == true
+                    newPoints1 = CalculatePointsForInterval(obj, interval, momentaryPhaseSamples, momentaryPhaseTimes, obj.direction1);
+                    newPoints2 = CalculatePointsForInterval(obj, interval, momentaryPhaseSamples, momentaryPhaseTimes, obj.direction2);
+                    points1 = [points1; newPoints1];
+                    points2 = [points2; newPoints2];
+                end
+            end
+        end
+        function result = IsSearchingPointsInInterval(obj, interval)
+            result = true;
+            if interval.TypeOfInterval == IntervalType.Bad
+                result = false;
             end
         end
         function momentaryPhaseTimes = GetGoodMaxAndMinTimesForMomentaryPhase(obj, momentaryPhaseSamples)
@@ -188,7 +194,6 @@ classdef PointCalculator < handle
         end
         function resultMomentaryPhaseTimes = GetTimesWithAmplitudesMoreThanLvl(obj, momentaryPhaseTimes, momentaryPhaseSamples)
             resultMomentaryPhaseTimes = [];
-            
             if ~isempty(momentaryPhaseTimes)
                 curMomentaryPhaseSamples = momentaryPhaseSamples(momentaryPhaseTimes);
                 curMinAmplitude = obj.minAmpOfMomentaryPhase * max(abs(curMomentaryPhaseSamples));
@@ -227,6 +232,7 @@ classdef PointCalculator < handle
                 if IsTimeInGoodPartOfInterval(obj, currTime, interval) == true && ...
                    sign(samples(currTime)) == direction
                     newPoint = Point(interval.IndexOfTrace, currTime, direction, interval.TypeOfInterval);
+                    newPoint = RecalculateTypeOfPointByHilbertEnvelope(obj, newPoint, interval);
                     points{end+1,1} = newPoint;
                 end
             end
@@ -240,9 +246,20 @@ classdef PointCalculator < handle
         end
         function result = IsTimeInGoodPartOfInterval(obj, currTime, interval)
             result = false;
-            if (currTime > interval.BeginTime+obj.offsetFromIntervalEdges && ... 
-                currTime < interval.EndingTime-obj.offsetFromIntervalEdges)
+            if (currTime > interval.BeginTime+obj.offsetFromIntervalEdgesToRemovePoints && ... 
+                currTime < interval.EndingTime-obj.offsetFromIntervalEdgesToRemovePoints)
                 result = true;
+            end
+        end
+        function point = RecalculateTypeOfPointByHilbertEnvelope(obj, point, interval)
+            if point.TypeOfPoint == PointType.Good
+                absHilbertSamples = obj.absHilbertSeismogram.Traces(interval.IndexOfTrace).Samples;
+                curAbsHilbertSamples = absHilbertSamples(interval.BeginTime:interval.EndingTime);
+                minAmplitude = max(curAbsHilbertSamples) * obj.minHilbertAmplitudeLvlInInterval;
+                curAmplitude = absHilbertSamples(point.Time);
+                if curAmplitude < minAmplitude
+                    point.TypeOfPoint = PointType.Additional;
+                end
             end
         end
 
@@ -254,7 +271,8 @@ classdef PointCalculator < handle
                 time = allTimesFuncFi(i);
                 time1 = allTimesFuncFi(i-1);
                 time2 = allTimesFuncFi(i+1);
-                if (sign(momentaryPhaseSamples(time)) == -1*sign(momentaryPhaseSamples(time1)) || sign(momentaryPhaseSamples(time)) == -1*sign(momentaryPhaseSamples(time2))) && ...
+                if (sign(momentaryPhaseSamples(time)) == -1*sign(momentaryPhaseSamples(time1)) || ... 
+                    sign(momentaryPhaseSamples(time)) == -1*sign(momentaryPhaseSamples(time2))) && ...
                     time >= firstTime
                     timesFuncFi(end+1,1) = time;
                 end

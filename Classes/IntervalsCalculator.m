@@ -2,7 +2,6 @@ classdef IntervalsCalculator < handle
     properties (Access = private)
         seismogram ISeismogram
         correctedAbsHilbertSeismogram ISeismogram
-%         numberSamplesPerSec double
         directWaveVelocity double
         surfaceVelocity double
 
@@ -20,7 +19,6 @@ classdef IntervalsCalculator < handle
         CorrectedAbsHilbertSeismogram
         DirectWaveVelocity
         SurfaceVelocity
-%         NumberSamplesPerSec
         SetOfIntervals
     end
 
@@ -60,13 +58,6 @@ classdef IntervalsCalculator < handle
         function surfaceVelocity = get.SurfaceVelocity(obj)
             surfaceVelocity = obj.surfaceVelocity;
         end
-
-%         function set.NumberSamplesPerSec(obj, numberSamplesPerSec)
-%             obj.numberSamplesPerSec = numberSamplesPerSec;
-%         end
-%         function numberSamplesPerSec = get.NumberSamplesPerSec(obj)
-%             numberSamplesPerSec = obj.numberSamplesPerSec;
-%         end
 
         function setOfIntervals = get.SetOfIntervals(obj)
             setOfIntervals = obj.setOfIntervals;

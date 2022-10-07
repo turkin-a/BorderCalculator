@@ -2,11 +2,13 @@ classdef ModelParameters  < ISingleton
     properties (Access = private)
         spanForFirstTimes
         minTraceAmpForFirstTimes
+        distanceForPointCalculation% = 1800
     end
 
     properties (Dependent, SetAccess = private)
         SpanForFirstTimes
         MinTraceAmpForFirstTimes
+        DistanceForPointCalculation
     end
 
     methods
@@ -34,6 +36,16 @@ classdef ModelParameters  < ISingleton
             end
             obj.minTraceAmpForFirstTimes = minTraceAmpForFirstTimes;
         end
+
+        function distanceForPointCalculation = get.DistanceForPointCalculation(obj)
+            distanceForPointCalculation = obj.distanceForPointCalculation;
+        end
+        function set.DistanceForPointCalculation(obj, distanceForPointCalculation)
+            if ischar(distanceForPointCalculation)
+                distanceForPointCalculation = str2double(distanceForPointCalculation);
+            end
+            obj.distanceForPointCalculation = distanceForPointCalculation;
+        end
     end
 
     methods (Access = public)
@@ -44,9 +56,32 @@ classdef ModelParameters  < ISingleton
                 obj.(fieldName) = xmlData.(fieldName);
             end
         end
+
+        
     end
 
     methods(Static)
+        function indexOfBegSensor = GetIndexOfBegSensor(seismogram)
+            obj = ModelParameters.Instance();
+            indexOfCentralSensor = seismogram.IndexOfCentralSensor;
+            distanceBetwenTwoSensors = seismogram.GetDistanceBetwenTwoSensors();
+            sensorsForPointCalculation = round(obj.distanceForPointCalculation / distanceBetwenTwoSensors);
+            indexOfBegSensor = indexOfCentralSensor - sensorsForPointCalculation;
+            if indexOfBegSensor < 1
+                indexOfBegSensor = 1;
+            end
+        end
+        function indexOfEndSensor = GetIndexOfEndSensor(seismogram)
+            obj = ModelParameters.Instance();
+            indexOfCentralSensor = seismogram.IndexOfCentralSensor;
+            distanceBetwenTwoSensors = seismogram.GetDistanceBetwenTwoSensors();
+            sensorsForPointCalculation = round(obj.distanceForPointCalculation / distanceBetwenTwoSensors);
+            indexOfEndSensor = indexOfCentralSensor + sensorsForPointCalculation;
+            if indexOfEndSensor > seismogram.NumberOfSensors
+                indexOfEndSensor = seismogram.NumberOfSensors;
+            end
+        end
+
         function obj = Instance()
             persistent uniqueInstance
             if isempty(uniqueInstance)

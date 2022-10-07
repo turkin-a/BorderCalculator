@@ -82,6 +82,7 @@ classdef TestSeismicDataBuilder < handle
             seismogram.SourceX = GetSourceX(obj);
             seismogram.SensorsX = GetSensorsX(obj);
             seismogram.Traces = traces;
+            seismogram.NumberSamplesPerSec = obj.numberSamplesPerSec;
         end
 
 

@@ -10,6 +10,7 @@ classdef XMLModelParametersData
     properties (Access = public)
         SpanForFirstTimes (1,:) char = []
         MinTraceAmpForFirstTimes (1,:) char = []
+        DistanceForPointCalculation (1,:) char = []
     end
 
     methods (Access = public)

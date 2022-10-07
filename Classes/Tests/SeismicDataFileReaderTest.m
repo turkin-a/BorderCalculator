@@ -11,9 +11,9 @@ classdef SeismicDataFileReaderTest < matlab.unittest.TestCase
             PrepareSeismicDataInMatFile(testCase);
             % Act
             seismicDataFileReader = SeismicDataFileReader(testCase.xmlReadFileName);
-            seismicData = seismicDataFileReader.Read();
+            actSeismicData = seismicDataFileReader.Read();
             % Assert
-            testCase.verifyEqual(seismicData, expSeismicData);
+            testCase.verifyEqual(actSeismicData, expSeismicData);
         end
     end
 

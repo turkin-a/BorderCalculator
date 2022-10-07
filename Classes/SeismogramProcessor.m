@@ -2,6 +2,7 @@ classdef SeismogramProcessor < handle
     properties (Access = private)
         intervalsCalculator IntervalsCalculator
         pointCalculator PointCalculator
+        parametersOfAxesCalculator ParametersOfPermissibleAxesCalculator
 
         seismogram ISeismogram
         correctedSeismogram ISeismogram
@@ -18,6 +19,7 @@ classdef SeismogramProcessor < handle
 
         isCalculateIntervals = 0
         isCalculatePoints = 0
+        isCalculatingParametersOfPermissibleAxes = 0
     end
     properties (Access = public, Dependent)
         Seismogram
@@ -58,6 +60,7 @@ classdef SeismogramProcessor < handle
         function obj = Calculate(obj)
             CalculateIntervals(obj);
             CalculatePoints(obj);
+            CalculateParametersOfPermissibleAxes(obj);
         end
     end
 
@@ -82,13 +85,11 @@ classdef SeismogramProcessor < handle
         end
 
         function CalculatePoints(obj)
-            % TesterVisualizer
-%             TesterVisualizer.PlotTestedData();
-
             applicationConfig = ApplicationConfig.Instance();
             fileName = [applicationConfig.FullOutputFolderName 'PointCalculatorResult_' applicationConfig.FileNameSuffix '.mat'];
             if obj.isCalculatePoints == true
                 obj.pointCalculator.MomentaryPhaseSeismogram = obj.momentaryPhaseSeismogram;
+                obj.pointCalculator.AbsHilbertSeismogram = obj.correctedAbsHilbertSeismogram;
                 obj.pointCalculator.SetOfIntervals = obj.setOfIntervals;
                 obj.pointCalculator.SurfaceVelocity = obj.surfaceVelocity;
                 obj.pointCalculator.DirectWaveVelocity = obj.directWaveVelocity;
@@ -103,6 +104,27 @@ classdef SeismogramProcessor < handle
             obj.setOfPoints2 = setOfPointsResult2;
             TesterVisualizer.SetPoints1(setOfPointsResult1);
             TesterVisualizer.SetPoints2(setOfPointsResult2);
+            
+        end
+
+        function CalculateParametersOfPermissibleAxes(obj)
+%             TesterVisualizer.PlotTestedData();
+
+
+            applicationConfig = ApplicationConfig.Instance();
+            fileName = [applicationConfig.FullOutputFolderName 'ParametersOfPermissibleAxesResult_' applicationConfig.FileNameSuffix '.mat'];
+            if obj.isCalculatingParametersOfPermissibleAxes == true
+                obj.parametersOfAxesCalculator = ParametersOfPermissibleAxesCalculator(obj.correctedAbsHilbertSeismogram, obj.directWaveVelocity);
+                obj.parametersOfAxesCalculator.SetOfPoints1 = obj.setOfPoints1;
+                obj.parametersOfAxesCalculator.SetOfPoints2 = obj.setOfPoints2;
+                obj.parametersOfAxesCalculator.Calculate();
+                setOfPermissibleAxesParams1 = obj.parametersOfAxesCalculator.SetOfPermissibleAxesParams1;
+                setOfPermissibleAxesParams2 = obj.parametersOfAxesCalculator.SetOfPermissibleAxesParams2;
+                save(fileName, "setOfPermissibleAxesParams1", "setOfPermissibleAxesParams2");
+            else
+                load(fileName, "setOfPermissibleAxesParams1", "setOfPermissibleAxesParams2");
+            end
+
             TesterVisualizer.PlotTestedData();
         end
 

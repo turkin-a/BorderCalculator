@@ -2,4 +2,5 @@
 <DefaultSettings.xml version="0.1">
     <SpanForFirstTimes>7</SpanForFirstTimes>
     <MinTraceAmpForFirstTimes>0.035</MinTraceAmpForFirstTimes>
+    <DistanceForPointCalculation>1800</DistanceForPointCalculation>
 </DefaultSettings.xml>

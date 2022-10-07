@@ -4,7 +4,7 @@ classdef IntervalTest < matlab.unittest.TestCase
         setOfIntervals cell
         seismogram ISeismogram
         absHilbertSeismogram ISeismogram
-        isPloting = false
+        isPloting = true
     end
 
     methods(Test)
