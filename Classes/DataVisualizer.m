@@ -221,6 +221,35 @@ classdef DataVisualizer < IVisualizer
                     resultLineWidth = lineWidth;
             end
         end
+
+        function PlotSetOfPairsOfPoints(setOfPairsOfPoints, currColor, lineWidth)
+            for indexOfSensor = 1:1:length(setOfPairsOfPoints)
+                pairsOfPoints = setOfPairsOfPoints{indexOfSensor};
+                if ~isempty(pairsOfPoints)
+                    DataVisualizer.PlotPairsOfPoints(pairsOfPoints, currColor, lineWidth);
+                end
+            end
+        end
+        function PlotPairsOfPoints(pairsOfPoints, currColor, lineWidth)
+            for i = 1:1:length(pairsOfPoints)
+                pairOfPoints = pairsOfPoints{i};
+                DataVisualizer.PlotPairOfPoints(pairOfPoints, currColor, lineWidth);
+            end
+        end
+        function PlotPairOfPoints(pairOfPoints, currColor, lineWidth)
+            obj = DataVisualizer.Instance();
+            UpdateFigure(obj);
+            indexOfSensor1 = pairOfPoints.LeftPoint.IndexOfSensor;
+            indexOfSensor2 = pairOfPoints.RightPoint.IndexOfSensor;
+            time1 = pairOfPoints.LeftPoint.Time;
+            time2 = pairOfPoints.RightPoint.Time;
+        
+            if pairOfPoints.TypeOfPairs == PairOfPointsType.Good
+                plot([indexOfSensor1 indexOfSensor2], -[time1 time2], [currColor '-'], 'LineWidth', lineWidth);
+            else
+                plot([indexOfSensor1 indexOfSensor2], -[time1 time2], [currColor '--'], 'LineWidth', lineWidth-1);
+            end
+        end
         
 
 

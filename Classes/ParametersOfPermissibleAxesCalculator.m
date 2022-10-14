@@ -19,9 +19,6 @@ classdef ParametersOfPermissibleAxesCalculator < handle
         setOfParams2
     end
     properties (Access = private, Constant)
-%         direction1 =  1;
-%         direction2 = -1;
-
         maxTubeDetlTime = 2
         maxOffsetX = 150
         minSensorDistance = 2

@@ -9,7 +9,6 @@ classdef IntervalForTest < Interval
         end
 
         function CalculateTypeByHilbertTest(obj, traceOfHilbert)
-            g = 1;
             CalculateTypeByHilbert(obj, traceOfHilbert);
         end
     end

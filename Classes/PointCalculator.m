@@ -14,7 +14,6 @@ classdef PointCalculator < handle
     properties (Access = private, Constant)
         direction1 =  1;
         direction2 = -1;
-%         distanceForPointCalculation = 1800
         minAmpOfMomentaryPhase = 0.6;
         maxFrequency = 60;
         offsetFromIntervalEdgesToRemovePoints = 4

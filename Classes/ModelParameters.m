@@ -56,7 +56,6 @@ classdef ModelParameters  < ISingleton
                 obj.(fieldName) = xmlData.(fieldName);
             end
         end
-
         
     end
 

@@ -52,6 +52,74 @@ classdef Point < handle
         function set.TypeOfPoint(obj, typeOfPoint)
             obj.typeOfPoint = typeOfPoint;
         end
+
+        
+    end
+
+    methods (Access = public)
+        function result = IsEqual(obj, point2)
+            result = false;
+            if obj.IndexOfSensor == point2.IndexOfSensor && obj.Time == point2.Time
+                result = true;
+            end
+        end
+
+        function leftPairs = GetConnectedLeftPairs(obj, setOfPairs)
+            leftPairs = [];
+            begIndexOfSensor = obj.indexOfSensor - 1;
+            if begIndexOfSensor > 0
+                pairs = setOfPairs{begIndexOfSensor};
+                if ~isempty(pairs)
+                    for i = 1:1:length(pairs)
+                        pair = pairs{i};
+                        if pair.RightTime == obj.Time
+                            leftPairs{end+1,1} = pair;
+                        end
+                    end
+                end
+            end
+        end
+        function rightPairs = GetConnectedRightPairs(obj, setOfPairs)
+            rightPairs = [];
+            begIndexOfSensor = obj.indexOfSensor;
+            if begIndexOfSensor <= length(setOfPairs)
+                pairs = setOfPairs{begIndexOfSensor};
+                if ~isempty(pairs)
+                    for i = 1:1:length(pairs)
+                        pair = pairs{i};
+                        if pair.LeftTime == obj.Time
+                            rightPairs{end+1,1} = pair;
+                        end
+                    end
+                end
+            end
+        end
+
+        function pairs = GetPairsWithLeftTime(obj, setOfPairs)
+            pairs = [];
+            pairsForSensor = setOfPairs{obj.indexOfSensor};
+            for i = 1:1:length(pairsForSensor)
+                pair = pairsForSensor{i};
+                if pair.LeftTime == obj.time
+                    pairs{end+1,1} = pair;
+                end
+            end
+        end
+        function pairs = GetPairsWithRightTime(obj, setOfPairs)
+            pairs = [];
+            begIndexOfSensor = obj.indexOfSensor - 1;
+            if begIndexOfSensor > 0
+                pairsForSensor = setOfPairs{begIndexOfSensor};
+                for i = 1:1:length(pairsForSensor)
+                    pair = pairsForSensor{i};
+                    if pair.RightTime == obj.time
+                        pairs{end+1,1} = pair;
+                    end
+                end
+            end
+        end
+        
+        
     end
 
     methods (Access = public, Static)

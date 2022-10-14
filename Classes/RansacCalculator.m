@@ -56,8 +56,7 @@ classdef RansacCalculator < handle
                     resultParameters = axisParameters;
                 end
             end
-        end
-        
+        end        
 
     end
 
@@ -94,7 +93,7 @@ classdef RansacCalculator < handle
                 return;
             end
             
-            times = GetTimesForAxisByH_Fi_V(obj, h, fi, v);
+            times = GetGoodTimesForAxisByH_Fi_V(obj, h, fi, v);
             if isempty(times)
                 return;
             end
@@ -179,12 +178,12 @@ classdef RansacCalculator < handle
             maxV = (1.25) * obj.directWaveVelocity + increaseVelocity;
         end
 
-        function resultTimes = GetTimesForAxisByParams(obj, axisParameters)
-            resultTimes = GetTimesForAxisByH_Fi_V(obj, axisParameters.H, axisParameters.Fi, axisParameters.V);
+        function resultTimes = GetGoodTimesForAxisByParams(obj, axisParameters)
+            resultTimes = GetGoodTimesForAxisByH_Fi_V(obj, axisParameters.H, axisParameters.Fi, axisParameters.V);
         end
-        function resultTimes = GetTimesForAxisByH_Fi_V(obj, h, fi, v)
+        function resultTimes = GetGoodTimesForAxisByH_Fi_V(obj, h, fi, v)
             resultTimes = [];
-            times = sqrt( obj.Li.^2 + 4*h^2 + 4*obj.Li*h*sind(fi)) / (v) / obj.dt;
+            times = Axis.GetTimesByH_Fi_V(h, fi, v, obj.Li, obj.dt);
             if IsTimesOfAxisGood(obj, times) == false
                 return;
             end
@@ -218,7 +217,7 @@ classdef RansacCalculator < handle
             end
         end
         function resultIndices = GetIndicesOfSensorsInTube(obj, axisParameters, maxTubeDetlTime)
-            times = GetTimesForAxisByParams(obj, axisParameters);
+            times = GetGoodTimesForAxisByParams(obj, axisParameters);
             sensorIndices = 1:obj.numberOfSensors;
             resultIndices = [];
             for it = 1:length(sensorIndices) 

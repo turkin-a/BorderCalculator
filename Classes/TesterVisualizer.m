@@ -10,6 +10,10 @@ classdef TesterVisualizer < ISingleton
         setOfMinTimes cell
         setOfPoints1 cell
         setOfPoints2 cell
+        initialSetOfPairsOfPoints1 cell
+        initialSetOfPairsOfPoints2 cell
+        preparedSetOfPairsOfPoints1 cell
+        preparedSetOfPairsOfPoints2 cell
         indexOfSeismogram
     end
 
@@ -75,12 +79,17 @@ classdef TesterVisualizer < ISingleton
 %             DataVisualizer.PlotSetOfTimes(obj.setOfMaxTimes, 'r+', 7);
 %             DataVisualizer.PlotSetOfTimes(obj.setOfMinTimes, 'b+', 7);
 
-            absHilbertSeismogram = obj.analyticalSignal.CorrectedAbsHilbertSeismicData.Seismograms(obj.indexOfSeismogram);
-            DataVisualizer.PlotSetOfIntervals(obj.setOfIntervals, 3, 8);
-            DataVisualizer.PlotHilbertInSetOfIntervals(obj.setOfIntervals, absHilbertSeismogram, 3, 8);
+%             absHilbertSeismogram = obj.analyticalSignal.CorrectedAbsHilbertSeismicData.Seismograms(obj.indexOfSeismogram);
+%             DataVisualizer.PlotSetOfIntervals(obj.setOfIntervals, 3, 8);
+%             DataVisualizer.PlotHilbertInSetOfIntervals(obj.setOfIntervals, absHilbertSeismogram, 3, 8);
 
             TesterVisualizer.PlotSetOfPoints();
-            
+%             DataVisualizer.PlotSetOfPairsOfPoints(obj.initialSetOfPairsOfPoints1, 'r', 2);
+%             DataVisualizer.PlotSetOfPairsOfPoints(obj.initialSetOfPairsOfPoints2, 'b', 2);
+
+            DataVisualizer.PlotSetOfPairsOfPoints(obj.preparedSetOfPairsOfPoints1, 'r', 2);
+            DataVisualizer.PlotSetOfPairsOfPoints(obj.preparedSetOfPairsOfPoints2, 'b', 2);
+
         end
 
         function PlotSetOfPoints()
@@ -100,6 +109,7 @@ classdef TesterVisualizer < ISingleton
             obj.setOfMaxTimes = setOfMaxTimes;
             obj.setOfMinTimes = setOfMinTimes;
         end
+
         function SetPoints1(setOfPoints1)
             obj = TesterVisualizer.Instance();
             obj.setOfPoints1 = setOfPoints1;
@@ -109,6 +119,24 @@ classdef TesterVisualizer < ISingleton
             obj.setOfPoints2 = setOfPoints2;
         end
 
+        function SetInitialPairsOfPoints1(setOfPairsOfPoints1)
+            obj = TesterVisualizer.Instance();
+            obj.initialSetOfPairsOfPoints1 = setOfPairsOfPoints1;
+        end
+        function SetInitialPairsOfPoints2(setOfPairsOfPoints2)
+            obj = TesterVisualizer.Instance();
+            obj.initialSetOfPairsOfPoints2 = setOfPairsOfPoints2;
+        end
+
+        function PreparedPairsOfPoints1(setOfPairsOfPoints1)
+            obj = TesterVisualizer.Instance();
+            obj.preparedSetOfPairsOfPoints1 = setOfPairsOfPoints1;
+        end
+        function PreparedPairsOfPoints2(setOfPairsOfPoints2)
+            obj = TesterVisualizer.Instance();
+            obj.preparedSetOfPairsOfPoints2 = setOfPairsOfPoints2;
+        end
+        
 
         function obj = Instance()
             persistent uniqueInstance
